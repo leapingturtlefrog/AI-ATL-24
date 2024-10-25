@@ -1,4 +1,4 @@
 pyarrow==17.0.0
-streamlit-authenticator==0.4.1
+streamlit-oauth 0.1.14
 pandas==2.2.0
 streamlit==1.39.0
