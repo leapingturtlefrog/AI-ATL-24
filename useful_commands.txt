@@ -1,0 +1,37 @@
+# SCRIPTS
+./run.sh                    : build the docker image and run a new container
+./push.sh "commit message"  : Adds, commits, pulls, merges, pushes, checks out a new
+                              branch, and then deletes the fifth oldest branch
+                              in one command.
+./push_simple.sh "commit message"
+                            : Similar to 'push.sh', but does not check out a new branch
+                              or get rid of old branches
+
+source ./setup.sh           : activate the virtual environment and install requirements
+                              (primarly for IDE recognition of libraries in this project)
+deactivate                  : deactivate the virtual environment
+
+# DOCKER
+docker images               : list all docker images
+docker ps -a                : list all docker containers
+docker container prune      : remove all nonactive containers
+docker kill container_a     : stop container named container_a
+
+# GITHUB
+git clone https://github.com/username/repository-name.git
+
+git checkout -b branch-name OR git checkout branch-name
+
+git add .
+git commit -m "msg"
+git checkout main
+git pull origin main
+git merge branch-name
+git push -u origin main
+
+git remote -v               : check remote repository
+git branch OR git status    : check current branch
+git branch -d branch-name   : delete local branch
+
+git remote set-url origin "new-remote-url"
+                            : Set new remote
