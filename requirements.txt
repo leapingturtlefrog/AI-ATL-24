@@ -1,5 +1,4 @@
-# Clears pandas warning that pyarrow will be a dependency in the future
 pyarrow==17.0.0
-
+streamlit-authenticator==0.4.1
 pandas==2.2.0
 streamlit==1.39.0
