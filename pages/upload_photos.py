@@ -1,7 +1,7 @@
 # upload_photos.py
 
 import streamlit as st
-from utils import analyze_photos
+from pages.utils import analyze_photos
 
 def upload_photos_page(st, photo_db):
     st.subheader("Upload Photos")

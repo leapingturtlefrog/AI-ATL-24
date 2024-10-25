@@ -3,13 +3,13 @@
 import streamlit as st
 from PIL import Image
 
-from data import user_db, session_logs, photo_db, initialize_session_state
-from home import home_page
-from login import login_page
-from register import register_page
-from upload_photos import upload_photos_page
-from start_session import start_session_page
-from settings import settings_page
+from pages.data import user_db, session_logs, photo_db, initialize_session_state
+from pages.home import home_page
+from pages.login import login_page
+from pages.register import register_page
+from pages.upload_photos import upload_photos_page
+from pages.start_session import start_session_page
+from pages.settings import settings_page
 
 def main():
     st.title("Memory Lane")
