@@ -6,7 +6,7 @@ import base64
 import json
 
 def sign_in_or_register_page(st):
-    st.title("Sign in or Register")
+    st.subheader("Sign in or Register")
 
     CLIENT_ID = st.secrets.google_auth_client_id
     CLIENT_SECRET = st.secrets.google_auth_client_secret

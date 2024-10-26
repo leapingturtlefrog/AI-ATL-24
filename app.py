@@ -32,12 +32,13 @@ def main():
     if "signed_in" not in st.session_state:
         st.session_state.signed_in = True
     
-    st.title("Memory Lane\n")
+    st.title("Memory Lane")
+    st.write("\n")
    
     if st.session_state.signed_in:
         menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
     else:
-        menu = ["Sign in or Register"]
+        menu = ["Sign in"]
     
     add_custom_css(st)
     
@@ -55,7 +56,7 @@ def main():
                 sign_out(st)
                 st.session_state.page = "sign_in_or_register"
         else:
-            if st.button("Please sign in or Register"):
+            if st.button("Sign In"):
                 st.session_state.page = "sign_in_or_register"
     
     if "page" not in st.session_state:
