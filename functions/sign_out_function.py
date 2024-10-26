@@ -1,6 +1,6 @@
 import streamlit as st
 
-def sign_out_function(st):
+def sign_out(st):
     st.session_state.signed_in = False
     st.session_state.signed_out_recently = True
     st.session_state.user_email = ''
