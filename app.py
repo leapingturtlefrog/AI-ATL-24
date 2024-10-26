@@ -3,13 +3,13 @@
 import streamlit as st
 from PIL import Image
 
-from components.data import session_logs, photo_db, initialize_session_state
-from components.home import home_page
-from components.login import login_page
-from components.register import register_page
-from components.upload_photos import upload_photos_page
-from components.start_session import start_session_page
-from components.settings import settings_page
+from pages.data import session_logs, photo_db, initialize_session_state
+from pages.home import home_page
+from pages.login import login_page
+from pages.register import register_page
+from pages.upload_photos import upload_photos_page
+from pages.start_session import start_session_page
+from pages.settings import settings_page
 
 def main():
     # st.session_state.logged_in = True
