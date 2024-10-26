@@ -12,7 +12,7 @@ from pages.start_session import start_session_page
 from pages.settings import settings_page
 
 def main():
-    st.session_state.logged_in = True
+    # st.session_state.logged_in = True
     st.title("Memory Lane")
     initialize_session_state()
     
