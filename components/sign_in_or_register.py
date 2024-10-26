@@ -50,4 +50,3 @@ def sign_in_or_register_page(st):
     
     if 'signed_out_recently' in st.session_state and st.session_state.signed_out_recently:
         st.success("Logged out successfully.")
-    
