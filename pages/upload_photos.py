@@ -1,31 +1,28 @@
 # upload_photos.py
-
 import streamlit as st
 import os
 import google.generativeai as genai
 import tempfile
 import uuid
-from sentence_transformers import SentenceTransformer
-import json
-
-# Load the embedding model (adjust model if needed)
-embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 def upload_to_gemini(uploaded_file, mime_type=None):
     with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
         tmp_file.write(uploaded_file.read())
         tmp_file_path = tmp_file.name
+
     try:
         genai_file = genai.upload_file(tmp_file_path, mime_type=mime_type)
         print(f"Uploaded file '{genai_file.display_name}' as: {genai_file.uri}")
     except Exception as e:
         print(f"Error uploading file: {e}")
         genai_file = None
+
     os.remove(tmp_file_path)
     uploaded_file.seek(0)
+
     return genai_file
 
-def generate_embeddings(uploaded_files):
+def generate_descriptions(uploaded_files):
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
@@ -41,7 +38,7 @@ def generate_embeddings(uploaded_files):
 
     parts = []
     for file in uploaded_files:
-        file.seek(0) 
+        file.seek(0)  
         file_data = file.read()
         mime_type = file.type or 'application/octet-stream'
 
@@ -66,17 +63,9 @@ def generate_embeddings(uploaded_files):
             },
         ]
     )
-    # Send the message to generate descriptions
-    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have a distinct key in the JSON listed image_[image_number].")
-    descriptions = json.loads(response.text)  # Parse JSON response from text
+    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have its own key in the json labeled image_[image_number].")
+    return response.text
 
-    embeddings = {}
-    # Generate embeddings for each description
-    for key, description in descriptions.items():
-        embedding = embed_model.encode(description)
-        embeddings[key] = embedding  # Save the embedding
-
-    return descriptions, embeddings
 
 def upload_photos_page(st, photo_db):
     st.subheader("Upload Photos")
@@ -87,7 +76,6 @@ def upload_photos_page(st, photo_db):
         st.session_state.photos_uploaded = True
         st.write("Analyzing photos...")
 
-        # Configure the API key
         GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY")
         if not GEMINI_API_KEY:
             st.error("API key not found. Please add your GEMINI_API_KEY to Streamlit secrets.")
@@ -95,20 +83,15 @@ def upload_photos_page(st, photo_db):
 
         genai.configure(api_key=GEMINI_API_KEY)
 
-        # Generate descriptions and embeddings
-        descriptions, embeddings = generate_embeddings(uploaded_files)
+        descriptions = generate_descriptions(uploaded_files)
         if descriptions:
             st.success("Photos analyzed successfully!")
-            st.write("Descriptions:", descriptions)
-
-            # Optionally, store the embeddings along with the images
+            st.write(descriptions)
             for i, file in enumerate(uploaded_files):
-                image_key = f"image_{i+1}"
                 photo_entry = {
                     'photo_id': str(uuid.uuid4()),
                     'image': file,
-                    'description': descriptions[image_key],
-                    'embedding': embeddings[image_key]  # Save embedding
+                    'description': descriptions,  
                 }
                 user_photos = photo_db.get(st.session_state.user_email, [])
                 user_photos.append(photo_entry)

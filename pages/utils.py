@@ -1,22 +1,6 @@
 # utils.py
-
 import uuid
 import datetime
-
-# Dummy AI functions
-def analyze_photos(photos):
-    # Simulate photo analysis
-    analyzed_photos = []
-    for photo in photos:
-        analyzed_photos.append({
-            'photo_id': str(uuid.uuid4()),
-            'image': photo,
-            'description': 'A memorable moment.',
-            'faces_detected': ['Person A', 'Person B'],
-            'location': 'Unknown',
-            'date': 'Unknown',
-        })
-    return analyzed_photos
 
 def ai_generate_prompt(photo_data, session_history):
     # Simulate AI-generated prompt

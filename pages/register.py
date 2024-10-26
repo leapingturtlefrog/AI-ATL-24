@@ -1,8 +1,6 @@
 # register.py
 import streamlit as st
 
-user_db = {}
-
 def register_page(st, user_db):
     st.subheader("Register")
     with st.form(key='register_form'):
