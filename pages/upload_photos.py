@@ -15,10 +15,10 @@ from sentence_transformers import SentenceTransformer
 embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("./pages/config/credentials.json")
+    cred = credentials.Certificate("./pages/config/creds.json")
     firebase_admin.initialize_app(cred, {
-        "databaseURL": "https://ai-atl-f34bf-default-rtdb.firebaseio.com/",
-        "storageBucket": "ai-atl-f34bf.appspot.com"
+        "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
+        "storageBucket": "ai-atl-new.appspot.com"
     })
     db_ref = db.reference("/") 
     bucket = storage.bucket() 
