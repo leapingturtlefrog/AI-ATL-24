@@ -8,6 +8,7 @@ from components.register import register_page
 from components.upload_photos import upload_photos_page
 from components.start_session import start_session_page
 from components.settings import settings_page
+from components.play_audio import play_audio_page
 
 def main():
     if 'logged_out_recently' not in st.session_state:
@@ -22,7 +23,7 @@ def main():
     initialize_session_state()
    
     if st.session_state.logged_in:
-        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout", "Audio5"]
+        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout", "Play Audio"]
     else:
         menu = ["Home", "Login", "Register"]
 
@@ -46,6 +47,8 @@ def main():
         settings_page(st)
     elif choice == "Logout" and st.session_state.logged_in:
         logout(st)
+    elif choice == "Play Audio" and st. session_state.logged_in:
+        play_audio_page(st)
     else:
         st.subheader("Please login to access this page.")
 

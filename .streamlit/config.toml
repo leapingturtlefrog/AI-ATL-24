@@ -1,1 +1,6 @@
-# Streamlit settings
+[theme]
+primaryColor="#00BFFF"
+backgroundColor="#FFFAF0"
+secondaryBackgroundColor="#FED8B1" # "#F8DE7E" "#E6BE8A"
+textColor="#6EAEA1"
+font="sans serif"

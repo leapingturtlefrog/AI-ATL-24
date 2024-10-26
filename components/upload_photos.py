@@ -12,7 +12,7 @@ import json
 import pickle
 from sentence_transformers import SentenceTransformer
 # Load the embedding model
-embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+# embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 if not firebase_admin._apps:
     cred = credentials.Certificate("./components/config/creds.json")
@@ -132,10 +132,12 @@ def upload_photos_page(st, photo_db):
             file_description = descriptions.get(description_key, "No description available for this image")
 
             # Embedding part
+            '''
             embedding_file_name = file.name
             embedding = embed_model.encode(file_description)
             st.write(f"Embedding for {filename}: {embedding}")
             embedding_dict[filename] = embedding.tolist()
+            '''
 
             st.write(f"Description for {description_key}: {file_description}")
 
