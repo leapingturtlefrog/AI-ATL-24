@@ -1,4 +1,4 @@
-##!/bin/bash
+#!/bin/bash
 
 IMAGE_NAME=image_a
 
@@ -17,5 +17,9 @@ else
 
         echo "Running a new container"
 
-        docker run --name $CONTAINER_NAME -p 8501:8501 --rm -it --privileged $IMAGE_NAME
+        # docker run --name $CONTAINER_NAME -p 8501:8501 --rm -it --privileged $IMAGE_NAME
+
+        # The following command will only work on true Linux and probably Mac becuase /dev/snd is nonexistent on WSL.
+        # Basically, the Docker container can't access the audio input devices, and this command *should* maybe give it permissions
+        docker run --name $CONTAINER_NAME -p 8501:8501 --rm -it --privileged --network host --device /dev/snd --group-add audio $IMAGE_NAME
 fi
