@@ -2,4 +2,4 @@
 venv/
 __pycache__/
 /pages/config/creds.json
-
+pages/config/*.json
