@@ -3,7 +3,7 @@
 import streamlit as st
 from PIL import Image
 
-from pages.data import user_db, session_logs, photo_db, initialize_session_state
+from pages.data import session_logs, photo_db, initialize_session_state
 from pages.home import home_page
 from pages.login import login_page
 from pages.register import register_page
@@ -14,12 +14,14 @@ from pages.settings import settings_page
 def main():
     st.title("Memory Lane")
     initialize_session_state()
+    
     if st.session_state.logged_in:
         menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout"]
     else:
         menu = ["Home", "Login", "Register"]
+    
     choice = st.sidebar.selectbox("Menu", menu)
-
+    
     if choice == "Home":
         if st.session_state.logged_in:
             home_page(st, session_logs)
@@ -27,7 +29,7 @@ def main():
             st.subheader("Welcome to Memory Lane")
             st.write("Please login or register to continue.")
     elif choice == "Login":
-        login_page(st, user_db)
+        login_page(st)
     elif choice == "Register":
         register_page(st, user_db)
     elif choice == "Upload Photos" and st.session_state.logged_in:
