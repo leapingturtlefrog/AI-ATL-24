@@ -76,7 +76,7 @@ def main():
     st.session_state.logged_in = True
     st.title("Memory Lane")
     initialize_session_state()
-
+   
     if st.session_state.logged_in:
         menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout", "Audio5"]
     else:
