@@ -16,6 +16,7 @@ COPY requirements_large.txt .
 RUN pip install --no-cache-dir -r requirements_large.txt
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN mkdir uploaded_audio
 COPY . .
 
 EXPOSE 8501 8502
