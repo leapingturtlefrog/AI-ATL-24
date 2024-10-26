@@ -5,10 +5,9 @@ from streamlit_oauth import OAuth2Component
 import base64
 import json
 
-def login_page(st):
-    st.title("Google Auth")
+def sign_in_or_register_page(st):
+    st.title("Sign in or Register")
 
-    # TODO: get client creds from CLOUD
     CLIENT_ID = st.secrets.google_auth_client_id
     CLIENT_SECRET = st.secrets.google_auth_client_secret
     AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -27,7 +26,7 @@ def login_page(st):
             use_container_width=True,
             pkce="S256",
         )
-    
+        
         if result:
             st.write(result)
             id_token = result["token"]["id_token"]
@@ -35,9 +34,10 @@ def login_page(st):
             payload += "=" * (-len(payload) % 4)
             payload = json.loads(base64.b64decode(payload))
             email = payload["email"]
+            
             st.session_state["auth"] = email
             st.session_state["token"] = result["token"]
-            st.session_state.logged_in = True
+            st.session_state.signed_in = True
             st.rerun()
     else:
         st.write("You are logged in!")
@@ -46,4 +46,8 @@ def login_page(st):
         if st.button("Logout"):
             del st.session_state["auth"]
             del st.session_state["token"]
-            st.session_state.logged_in = False
+            st.session_state.signed_in = False
+    
+    if 'signed_out_recently' in st.session_state and st.session_state.signed_out_recently:
+        st.success("Logged out successfully.")
+    

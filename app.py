@@ -1,70 +1,55 @@
 import streamlit as st
-from PIL import Image
 
 from components.data import session_logs, photo_db, initialize_session_state
 from components.home import home_page
-from components.login import login_page
+from components.sign_in_or_register import sign_in_or_register_page
 from components.register import register_page
 from components.upload_photos import upload_photos_page
 from components.start_session import start_session_page
-from components.settings import settings_page
+from components.profile import profile_page
 from components.play_audio import play_audio_page
 
+from functions.sign_out_function import sign_out_function
+
 def main():
+    initialize_session_state()
+    
     if 'logged_out_recently' not in st.session_state:
         st.session_state.logged_out_recently = False
     
     if st.session_state.logged_out_recently:
-        login_page(st)
+        sign_in_or_register_page(st)
         return
     
-    st.session_state.logged_in = True
+    if 'signed_in' not in st.session_state:
+        st.session_state.signed_in = False
+    
     st.title("Memory Lane")
-    initialize_session_state()
    
-    if st.session_state.logged_in:
-        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Sign In", "Logout", "Play Audio"]
+    if st.session_state.signed_in:
+        menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
     else:
-        menu = ["Home", "Login", "Register"]
+        menu = ["Sign in or Register"]
 
     choice = st.sidebar.selectbox("Menu", menu)
-
-    if choice == "Home":
-        if st.session_state.logged_in:
+    
+    match choice:
+        case "Home":
             home_page(st, session_logs)
-        else:
-            st.subheader("Welcome to Memory Lane")
-            st.write("Please login or register to continue.")
-    elif choice == "Sign In":
-        login_page(st)
-    elif choice == "Register":
-        register_page(st, user_db)
-    elif choice == "Upload Photos" and st.session_state.logged_in:
-        upload_photos_page(st, photo_db)
-    elif choice == "Start Session" and st.session_state.logged_in:
-        start_session_page(st, session_logs)
-    elif choice == "Settings" and st.session_state.logged_in:
-        settings_page(st)
-    elif choice == "Logout" and st.session_state.logged_in:
-        logout(st)
-    elif choice == "Play Audio" and st. session_state.logged_in:
-        play_audio_page(st)
-    else:
-        st.subheader("Please login to access this page.")
-
-def logout(st):
-    st.session_state.logged_in = False
-    st.session_state.logged_out_recently = True
-    st.session_state.user_email = ''
-    st.session_state.patient_name = ''
-    st.session_state.caregiver_name = ''
-    st.session_state.photos_uploaded = False
-    st.session_state.analyzed_photos = []
-    st.session_state.session_history = []
-    st.session_state.current_photo = None
-    st.success("Logged out successfully.")
-    st.rerun()
+        case "Start Session":
+            start_session_page(st, session_logs)
+        case "Profile":
+            profile_page(st)
+        case "Upload Photos":
+            upload_photos_page(st, photo_db)
+        case "Sign out":
+            sign_out_function(st)
+            sign_in_or_register_page(st)
+        case "Sign in or Register":
+            sign_in_or_register_page(st)
+        case _:
+            print("Error. Selection Other Than Options Made")
+            st.subheader("Please select one of the options.")
 
 if __name__ == "__main__":
     main()
-
