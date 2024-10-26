@@ -153,4 +153,4 @@ def start_session_page(st, session_logs):
 
     st.components.v1.html(html_content, height=600, scrolling=True)
 
-    st.image(img_href, caption="")
+    # st.image(img_href, caption="")

@@ -23,7 +23,7 @@ def main():
     initialize_session_state()
    
     if st.session_state.logged_in:
-        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout", "Play Audio"]
+        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Sign In", "Logout", "Play Audio"]
     else:
         menu = ["Home", "Login", "Register"]
 
@@ -35,7 +35,7 @@ def main():
         else:
             st.subheader("Welcome to Memory Lane")
             st.write("Please login or register to continue.")
-    elif choice == "Login":
+    elif choice == "Sign In":
         login_page(st)
     elif choice == "Register":
         register_page(st, user_db)
