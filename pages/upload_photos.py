@@ -8,6 +8,11 @@ from firebase_admin import db, credentials, storage
 import json
 import base64
 from io import BytesIO
+import json
+import pickle
+from sentence_transformers import SentenceTransformer
+# Load the embedding model
+embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 if not firebase_admin._apps:
     cred = credentials.Certificate("./pages/config/credentials.json")
@@ -39,11 +44,11 @@ def decode_image(base64_string):
 
 def generate_descriptions(uploaded_files):
     generation_config = {
-        "temperature": 1,
+        "temperature": 0.2,  # Lower temperature for more deterministic output
         "top_p": 0.95,
         "top_k": 40,
         "max_output_tokens": 8192,
-        "response_mime_type": "text/plain",
+        "response_mime_type": "text/plain",  # Keeping as text/plain; we'll enforce JSON in the prompt
     }
     
     model = genai.GenerativeModel(
@@ -52,6 +57,8 @@ def generate_descriptions(uploaded_files):
     )
     
     parts = []
+    file_names = []
+
     for file in uploaded_files:
         file.seek(0)
         file_data = file.read()
@@ -87,7 +94,6 @@ def generate_descriptions(uploaded_files):
         response_text = response.text.strip()
         if response_text.startswith("```json"):
             response_text = response_text.replace("```json", "").replace("```", "")
-        
         # Parse the JSON response
         descriptions_dict = json.loads(response_text)
         return descriptions_dict
@@ -107,7 +113,6 @@ def upload_photos_page(st, photo_db):
 
         # Generate descriptions before uploading to Firebase
         descriptions = generate_descriptions(uploaded_files)
-        
         # Debugging: Output the descriptions to verify correct structure
         st.write("Descriptions dictionary:", descriptions)
         
@@ -115,7 +120,9 @@ def upload_photos_page(st, photo_db):
             st.error("Failed to generate descriptions or mismatch in file count.")
             return
         
+
         st.write("Descriptions generated. Uploading files...")
+        embedding_dict = {}
 
         for idx, file in enumerate(uploaded_files):
             filename = os.path.basename(file.name)  # Define filename at the start of the loop
@@ -123,6 +130,13 @@ def upload_photos_page(st, photo_db):
             st.write(f"Processing file {filename} with description key: {description_key}")
 
             file_description = descriptions.get(description_key, "No description available for this image")
+
+            # Embedding part
+            embedding_file_name = file.name
+            embedding = embed_model.encode(file_description)
+            st.write(f"Embedding for {filename}: {embedding}")
+            embedding_dict[filename] = embedding.tolist()
+
             st.write(f"Description for {description_key}: {file_description}")
 
             # Generate a unique filename for Firebase Storage
@@ -147,13 +161,14 @@ def upload_photos_page(st, photo_db):
             # Store image URL and description in Realtime Database
             photo_entry = {
                 'image_url': image_url,
-                'description': file_description,
+                'description': file_description, # Add embedding value somehow (numpy array)
             }
             test_photos_ref = db.reference("test_photos")
             test_photos_ref.child(photo_id).set(photo_entry)
             st.write(f"Photo entry saved with ID {photo_id}")
 
         st.success("Photos and descriptions uploaded successfully!")
+        
     else:
         st.write("No photos uploaded yet.")
 
