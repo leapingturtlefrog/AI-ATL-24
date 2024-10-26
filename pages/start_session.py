@@ -1,8 +1,10 @@
 # start_session.py
 
+import os
 import streamlit as st
 from pages.utils import ai_generate_prompt, ai_process_response, log_session
 
+"""
 def start_session_page(st, session_logs):
     st.subheader("Start Reminiscence Session")
     if not st.session_state.analyzed_photos:
@@ -52,3 +54,13 @@ def start_session_page(st, session_logs):
                 log_session(st, session_logs)
                 if st.button("Return to Dashboard"):
                     st.experimental_rerun()
+
+"""
+
+def start_session(st):
+    html_file_path = os.path("listen.html")
+    with open(html_file_path, "r") as f:
+        html_content = f.read()
+
+    st.components.v1.html(html_content, height=600, scrolling=True)
+
