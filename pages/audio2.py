@@ -16,7 +16,6 @@ from streamlit_webrtc import WebRtcMode, webrtc_streamer
 
 HERE = Path(__file__).parent
 
-
 # This code is based on https://github.com/whitphx/streamlit-webrtc/blob/c1fe3c783c9e8042ce0c95d789e833233fd82e74/sample_utils/turn.py
 @st.cache_data  # type: ignore
 def get_ice_servers():

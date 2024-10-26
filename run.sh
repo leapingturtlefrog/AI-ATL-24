@@ -10,8 +10,6 @@ else
         docker build -t $IMAGE_NAME .
         echo "Running a new container"
         docker run --name $CONTAINER_NAME -p 8501:8501 --rm -it --privileged $IMAGE_NAME
-    echo "Building the Docker image"
-    docker build -t $IMAGE_NAME .
     echo "Running a new container"
     eval $DOCKER_COMMAND
 fi

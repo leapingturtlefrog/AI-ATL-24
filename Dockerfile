@@ -1,9 +1,8 @@
 FROM python:3.10-slim
-
-# Install PortAudio and required build tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     portaudio19-dev \
+    && apt-get install -y ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
