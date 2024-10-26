@@ -3,7 +3,11 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     portaudio19-dev \
     && apt-get install -y ffmpeg \
+    && apt-get install python3-pyaudio \
+    && apt-get install python3-dev
     && rm -rf /var/lib/apt/lists/*
+
+# RUN apt-get install python3-pyaudio python3-dev portaudio19-dev
 
 WORKDIR /usr/src/app
 COPY requirements_large.txt .

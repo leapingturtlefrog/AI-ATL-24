@@ -37,6 +37,7 @@ def login_page(st):
             email = payload["email"]
             st.session_state["auth"] = email
             st.session_state["token"] = result["token"]
+            st.session_state.logged_in = True
             st.rerun()
     else:
         st.write("You are logged in!")
@@ -45,3 +46,4 @@ def login_page(st):
         if st.button("Logout"):
             del st.session_state["auth"]
             del st.session_state["token"]
+            st.session_state.logged_in = False

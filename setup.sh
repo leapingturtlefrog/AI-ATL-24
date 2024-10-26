@@ -3,5 +3,6 @@
 
 python3 -m venv venv \
 && source venv/bin/activate \
+&& pip install -r requirements_large.txt \
 && pip install -r requirements.txt \
 && echo "Script successful" || echo "Script unsuccessful"
