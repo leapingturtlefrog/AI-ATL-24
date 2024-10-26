@@ -9,8 +9,8 @@ def login_page(st):
     st.title("Google Auth")
 
     # TODO: get client creds from CLOUD
-    CLIENT_ID = ""
-    CLIENT_SECRET = ""
+    CLIENT_ID = st.secrets.google_auth_client_id
+    CLIENT_SECRET = st.secrets.google_auth_client_secret
     AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
     TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
     REVOKE_ENDPOINT = "https://oauth2.googleapis.com/revoke"
@@ -20,7 +20,7 @@ def login_page(st):
         result = oauth2.authorize_button(
             name="Continue with Google",
             icon="https://www.google.com.tw/favicon.ico",
-            redirect_uri="http://localhost:8501",
+            redirect_uri="http://localhost:8501/",
             scope="openid email profile",
             key="google",
             extras_params={"prompt": "consent", "access_type": "offline"},
