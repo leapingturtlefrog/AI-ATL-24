@@ -1,5 +1,3 @@
-# start_session.py
-
 import os
 import streamlit as st
 from components.utils import ai_generate_prompt, ai_process_response, log_session
@@ -57,10 +55,13 @@ def start_session_page(st, session_logs):
 
 """
 
-def start_session(st):
-    html_file_path = os.path("listen.html")
+def start_session_page(st, session_logs):
+    current_dir = os.path.dirname(__file__)
+    html_file_path = os.path.join(current_dir, "session.html")
+
     with open(html_file_path, "r") as f:
         html_content = f.read()
 
     st.components.v1.html(html_content, height=600, scrolling=True)
 
+    # st.image(os.path.join(current_dir, "test.jpg"), caption="")

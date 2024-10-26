@@ -1,5 +1,3 @@
-# app.py
-
 import streamlit as st
 from PIL import Image
 
@@ -8,16 +6,8 @@ from components.home import home_page
 from components.login import login_page
 from components.register import register_page
 from components.upload_photos import upload_photos_page
-# from components.start_session import start_session
+from components.start_session import start_session_page
 from components.settings import settings_page
-
-def display_audio5(st):
-    import os
-    html_file_path = os.path.join("components", "listen.html")
-    with open(html_file_path, "r") as f:
-        html_content = f.read()
-
-    st.components.v1.html(html_content, height=600, scrolling=True)
 
 def main():
     if 'logged_out_recently' not in st.session_state:
@@ -56,9 +46,6 @@ def main():
         settings_page(st)
     elif choice == "Logout" and st.session_state.logged_in:
         logout(st)
-    elif choice == "Audio5":
-        pass
-        display_audio5(st)
     else:
         st.subheader("Please login to access this page.")
 
