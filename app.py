@@ -64,18 +64,26 @@ def listen_and_update(manager: TranscriptionManager):
         manager.update_transcription(f"Error in listen_and_update: {e}")
         print(f"Error in listen_and_update: {e}")
 
+def display_audio5(st):
+    import os
+    html_file_path = os.path.join("pages", "listen.html")
+    with open(html_file_path, "r") as f:
+        html_content = f.read()
+
+    st.components.v1.html(html_content, height=600, scrolling=True)
+
 def main():
     st.session_state.logged_in = True
     st.title("Memory Lane")
     initialize_session_state()
-    
+
     if st.session_state.logged_in:
-        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout"]
+        menu = ["Home", "Upload Photos", "Start Session", "Settings", "Logout", "Audio5"]
     else:
         menu = ["Home", "Login", "Register"]
-    
+
     choice = st.sidebar.selectbox("Menu", menu)
-    
+
     if choice == "Home":
         if st.session_state.logged_in:
             home_page(st, session_logs)
@@ -94,9 +102,12 @@ def main():
         settings_page(st)
     elif choice == "Logout" and st.session_state.logged_in:
         logout(st)
+    elif choice == "Audio5":
+        pass
+        display_audio5(st)
     else:
         st.subheader("Please login to access this page.")
-    
+
      # Initialize the transcription manager
     manager = get_transcription_manager()
 

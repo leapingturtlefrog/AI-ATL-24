@@ -1,0 +1,138 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Capture Microphone Audio into Buffer</title>
+    <script type="text/javascript">
+        var webaudio_tooling_obj = function () {
+            var audioContext = new AudioContext();
+            console.log("Audio is starting up ...");
+
+            var BUFF_SIZE = 16384;
+            var microphone_stream = null, gain_node = null, script_processor_node = null, analyserNode = null;
+
+            if (!navigator.getUserMedia) {
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                                          navigator.mozGetUserMedia || navigator.msGetUserMedia;
+            }
+
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({audio: true},
+                    function(stream) {
+                        start_microphone(stream);
+                    },
+                    function(e) {
+                        alert('Error capturing audio.');
+                    }
+                );
+            } else {
+                alert('getUserMedia not supported in this browser.');
+            }
+
+            function show_some_data(given_typed_array, num_row_to_display, label) {
+                var size_buffer = given_typed_array.length;
+                var output = document.getElementById("output");
+                output.innerHTML += `<strong>${label}</strong>:<br/>`;
+                for (var index = 0; index < num_row_to_display && index < size_buffer; index += 1) {
+                    output.innerHTML += `${given_typed_array[index]}<br/>`;
+                }
+                output.innerHTML += "<br/>";
+            }
+
+            function process_microphone_buffer(event) {
+                var microphone_output_buffer = event.inputBuffer.getChannelData(0); // just mono - 1 channel for now
+                show_some_data(microphone_output_buffer, 5, "From getChannelData");
+            }
+
+            function start_microphone(stream) {
+                gain_node = audioContext.createGain();
+                microphone_stream = audioContext.createMediaStreamSource(stream);
+                microphone_stream.connect(gain_node);
+
+                script_processor_node = audioContext.createScriptProcessor(BUFF_SIZE, 1, 1);
+                script_processor_node.onaudioprocess = process_microphone_buffer;
+                microphone_stream.connect(script_processor_node);
+            }
+        }();
+    </script>
+</head>
+<body>
+    <p>Volume</p>
+    <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+    <button onclick="webaudio_tooling_obj()">Listen to mic</button>
+    
+    <div id="output" style="white-space: pre; color: white"></div>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Capture Microphone Audio into Buffer</title>
+    <script type="text/javascript">
+        var webaudio_tooling_obj = function () {
+            var audioContext = new AudioContext();
+            console.log("Audio is starting up ...");
+
+            var microphone_stream = null, gain_node = null, mediaRecorder = null;
+            var audioChunks = [];
+            var CHUNK_TIME = 5000; // 5 seconds
+
+            if (!navigator.mediaDevices.getUserMedia) {
+                alert('getUserMedia not supported in this browser.');
+                return;
+            }
+
+            navigator.mediaDevices.getUserMedia({audio: true})
+                .then(function(stream) {
+                    start_microphone(stream);
+                })
+                .catch(function(e) {
+                    alert('Error capturing audio.');
+                });
+
+            function start_microphone(stream) {
+                gain_node = audioContext.createGain();
+                microphone_stream = audioContext.createMediaStreamSource(stream);
+                microphone_stream.connect(gain_node);
+
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = function(event) {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = function() {
+                    var blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'audio_chunk_' + Date.now() + '.webm';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    audioChunks = []; // Clear the chunks for the next recording
+                };
+
+                mediaRecorder.start();
+
+                // Stop recording and trigger download every CHUNK_TIME
+                setInterval(function() {
+                    mediaRecorder.stop();
+                    mediaRecorder.start();
+                }, CHUNK_TIME);
+            }
+        }();
+    </script>
+</head>
+<body>
+    <p>Volume</p>
+    <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+    <button onclick="webaudio_tooling_obj()">Listen to mic</button>
+
+    <div id="output" style="white-space: pre; color: white"></div>
+</body>
+</html>
+
