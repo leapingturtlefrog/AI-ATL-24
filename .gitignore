@@ -1,5 +1,5 @@
 .streamlit/secrets.toml
 venv/
 __pycache__/
-/pages/config/credentials.json
+/pages/config/creds.json
 
