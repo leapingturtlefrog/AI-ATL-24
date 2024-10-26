@@ -30,7 +30,7 @@ def main():
         return
     
     if "signed_in" not in st.session_state:
-        st.session_state.signed_in = False
+        st.session_state.signed_in = True
     
     st.title("Memory Lane\n")
    
