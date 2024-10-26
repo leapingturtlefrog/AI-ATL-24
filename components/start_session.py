@@ -55,102 +55,123 @@ def start_session_page(st, session_logs):
 
 """
 
-img_href = "https://images.unsplash.com/photo-1729366791970-3f56163c901a?q=80&w=1925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-
-
-html_content = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="ISO-8859-1">
-    <title>Session</title>
-    <script type="text/javascript">
-        var webaudio_tooling_obj = function () {{
-            var audioContext = new AudioContext();
-            console.log("Audio is starting up ...");
-
-            var microphone_stream = null, mediaRecorder = null;
-            var audioChunks = [];
-
-            if (!navigator.mediaDevices.getUserMedia) {{
-                alert('getUserMedia not supported in this browser.');
-                return;
-            }}
-
-            navigator.mediaDevices.getUserMedia({{audio: true}})
-                .then(function(stream) {{
-                    start_microphone(stream);
-                }})
-                .catch(function(e) {{
-                    alert('Error capturing audio.');
-                }});
-
-            function start_microphone(stream) {{
-                microphone_stream = audioContext.createMediaStreamSource(stream);
-                mediaRecorder = new MediaRecorder(stream);
-
-                mediaRecorder.ondataavailable = function(event) {{
-                    audioChunks.push(event.data);
-                }};
-
-                mediaRecorder.onstop = function() {{
-                    var blob = new Blob(audioChunks, {{ type: 'audio/webm' }});
-                    sendAudioToServer(blob);
-                    audioChunks = []; // Clear the chunks for the next recording
-                }};
-
-                document.getElementById("startBtn").onclick = function() {{
-                    audioChunks = []; // Clear previous audio chunks
-                    mediaRecorder.start();
-                    console.log("Recording started...");
-                }};
-
-                document.getElementById("stopBtn").onclick = function() {{
-                    mediaRecorder.stop();
-                    console.log("Recording stopped...");
-                }};
-            }}
-
-            function sendAudioToServer(blob) {{
-                var formData = new FormData();
-                formData.append('audio', blob, 'audio_chunk_' + Date.now() + '.webm');
-
-                fetch('http://127.0.0.1:8502/upload-audio', {{
-                    method: 'POST',
-                    body: formData
-                }})
-                .then(response => response.json())
-                .then(data => {{
-                    console.log('Audio sent successfully:', data);
-                }})
-                .catch(error => {{
-                    console.error('Error sending audio:', error);
-                }});
-            }}
-        }}();
-    </script>
-</head>
-<body>
-    <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
-    <button id="startBtn">Start Recording</button>
-    <button id="stopBtn">Stop Recording</button>
-    <br><br>
-    <img id="myImage" src="{img_href}" alt="image" />
-</body>
-</html>
-"""
-
-
-
 def start_session_page(st, session_logs):
     current_dir = os.path.dirname(__file__)
-    html_file_path = os.path.join(current_dir, "session.html")
-    
+    audio_folder = "uploaded_audio"
+    audio_directory_path = os.path.join(current_dir, "..", audio_folder)
 
-    # with open(html_file_path, "r") as f:
-        # html_content = f.read()
+    # Use a session state to keep track of previously processed audio files
+    if 'processed_files' not in st.session_state:
+        st.session_state.processed_files = set()
 
+    new_audio_files = [True]
 
+    while True:
+        img_href = "https://tinyurl.com/2uhawmhp"
+
+        if len(new_audio_files) > 0:
+            # Process the new audio file(s)
+            for audio_file in new_audio_files:
+                if not isinstance(audio_file, str):
+                    break
+                # Here you can process the audio file if needed
+
+                img_href = ""
+
+                st.session_state.processed_files.add(audio_file)
+
+                os.remove(os.path.join(audio_directory_path, audio_file))
+
+            # Create the HTML content
+            html = f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="ISO-8859-1">
+                <title>Session</title>
+                <script type="text/javascript">
+                    var webaudio_tooling_obj = function () {{
+                        var audioContext = new AudioContext();
+                        console.log("Audio is starting up ...");
+
+                        var microphone_stream = null, mediaRecorder = null;
+                        var audioChunks = [];
+
+                        if (!navigator.mediaDevices.getUserMedia) {{
+                            alert('getUserMedia not supported in this browser.');
+                            return;
+                        }}
+
+                        navigator.mediaDevices.getUserMedia({{audio: true}})
+                            .then(function(stream) {{
+                                start_microphone(stream);
+                            }})
+                            .catch(function(e) {{
+                                alert('Error capturing audio.');
+                            }});
+
+                        function start_microphone(stream) {{
+                            microphone_stream = audioContext.createMediaStreamSource(stream);
+                            mediaRecorder = new MediaRecorder(stream);
+
+                            mediaRecorder.ondataavailable = function(event) {{
+                                audioChunks.push(event.data);
+                            }};
+
+                            mediaRecorder.onstop = function() {{
+                                var blob = new Blob(audioChunks, {{ type: 'audio/webm' }});
+                                sendAudioToServer(blob);
+                                audioChunks = []; // Clear the chunks for the next recording
+                            }};
+
+                            document.getElementById("startBtn").onclick = function() {{
+                                audioChunks = []; // Clear previous audio chunks
+                                mediaRecorder.start();
+                                console.log("Recording started...");
+                            }};
+
+                            document.getElementById("stopBtn").onclick = function() {{
+                                mediaRecorder.stop();
+                                console.log("Recording stopped...");
+                            }};
+                        }}
+
+                        function sendAudioToServer(blob) {{
+                            var formData = new FormData();
+                            formData.append('audio', blob, 'audio_chunk_' + Date.now() + '.webm');
+
+                            fetch('http://127.0.0.1:8502/upload-audio', {{
+                                method: 'POST',
+                                body: formData
+                            }})
+                            .then(response => response.json())
+                            .then(data => {{
+                                console.log('Audio sent successfully:', data);
+                            }})
+                            .catch(error => {{
+                                console.error('Error sending audio:', error);
+                            }});
+                        }}
+                    }}();
+                </script>
+            </head>
+            <body>
+                <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+                <button id="startBtn">Start Recording</button>
+                <button id="stopBtn">Stop Recording</button>
+                <br><br>
+                <img id="myImage" src="{img_href}" alt="image" />
+            </body>
+            </html>
+            """
+
+            display_page(st, html)
+
+        audio_files = [f for f in os.listdir(audio_directory_path) if f.endswith('.webm')]
+
+        new_audio_files = [f for f in audio_files if f not in st.session_state.processed_files]
+        
+
+def display_page(st, html_content):
     st.components.v1.html(html_content, height=600, scrolling=True)
 
-    # st.image(img_href, caption="")
