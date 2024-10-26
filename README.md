@@ -1,6 +1,6 @@
 # Project for AI ATL 2024 Hackathon
 Get Ibrahim to show you how to add your Google credentials to be able to use the speech recognition.
-<br>It doesn't take too long: (https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to)[https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to] and may also need (https://cloud.google.com/sdk/docs/install#deb)[https://cloud.google.com/sdk/docs/install#deb].
+<br>It doesn't take too long: [https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to](https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to) and may also need [https://cloud.google.com/sdk/docs/install#deb](https://cloud.google.com/sdk/docs/install#deb).
 <br>I think you will also need to make a Google Cloud account and get the $300 in free credits, and then enable the text-to-speech api.
 <br>
 <br>After that, this is what has worked for me:
