@@ -5,6 +5,11 @@ import os
 import google.generativeai as genai
 import tempfile
 import uuid
+from sentence_transformers import SentenceTransformer
+import json
+
+# Load the embedding model (adjust model if needed)
+embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 def upload_to_gemini(uploaded_file, mime_type=None):
     with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp_file:
@@ -18,10 +23,9 @@ def upload_to_gemini(uploaded_file, mime_type=None):
         genai_file = None
     os.remove(tmp_file_path)
     uploaded_file.seek(0)
-
     return genai_file
 
-def generate_descriptions(uploaded_files):
+def generate_embeddings(uploaded_files):
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
@@ -63,9 +67,16 @@ def generate_descriptions(uploaded_files):
         ]
     )
     # Send the message to generate descriptions
-    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have a distinct key in the JSON listed image_[image_number].]")
-    return response.text
+    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have a distinct key in the JSON listed image_[image_number].")
+    descriptions = json.loads(response.text)  # Parse JSON response from text
 
+    embeddings = {}
+    # Generate embeddings for each description
+    for key, description in descriptions.items():
+        embedding = embed_model.encode(description)
+        embeddings[key] = embedding  # Save the embedding
+
+    return descriptions, embeddings
 
 def upload_photos_page(st, photo_db):
     st.subheader("Upload Photos")
@@ -84,17 +95,20 @@ def upload_photos_page(st, photo_db):
 
         genai.configure(api_key=GEMINI_API_KEY)
 
-        # Generate descriptions
-        descriptions = generate_descriptions(uploaded_files)
+        # Generate descriptions and embeddings
+        descriptions, embeddings = generate_embeddings(uploaded_files)
         if descriptions:
             st.success("Photos analyzed successfully!")
-            st.write(descriptions)
-            # Optionally, store the descriptions along with the images
+            st.write("Descriptions:", descriptions)
+
+            # Optionally, store the embeddings along with the images
             for i, file in enumerate(uploaded_files):
+                image_key = f"image_{i+1}"
                 photo_entry = {
                     'photo_id': str(uuid.uuid4()),
                     'image': file,
-                    'description': descriptions,  # Adjust if descriptions are in a list
+                    'description': descriptions[image_key],
+                    'embedding': embeddings[image_key]  # Save embedding
                 }
                 user_photos = photo_db.get(st.session_state.user_email, [])
                 user_photos.append(photo_entry)
@@ -103,6 +117,3 @@ def upload_photos_page(st, photo_db):
             st.error("Failed to generate descriptions.")
     else:
         st.write("No photos uploaded yet.")
-
-
-
