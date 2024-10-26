@@ -19,7 +19,6 @@ def upload_to_gemini(uploaded_file, mime_type=None):
 
     os.remove(tmp_file_path)
     uploaded_file.seek(0)
-
     return genai_file
 
 def generate_descriptions(uploaded_files):
@@ -41,8 +40,6 @@ def generate_descriptions(uploaded_files):
         file.seek(0)  
         file_data = file.read()
         mime_type = file.type or 'application/octet-stream'
-
-        # Construct the part with inline_data
         part = {
             "inline_data": {
                 "mime_type": mime_type,
@@ -63,7 +60,7 @@ def generate_descriptions(uploaded_files):
             },
         ]
     )
-    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have its own key in the json labeled image_[image_number].")
+    response = chat_session.send_message("Create a description for what is in each of these photos in JSON format in the order uploaded. There should be one description for each image and each description should have its own key in the json labeled by its file name.")
     return response.text
 
 
