@@ -38,6 +38,7 @@ def sign_in_or_register_page(st):
             st.session_state["auth"] = email
             st.session_state["token"] = result["token"]
             st.session_state.signed_in = True
+            st.session_state.page = "home"
             st.rerun()
     else:
         st.write("You are logged in!")
