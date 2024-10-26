@@ -3,17 +3,17 @@
 import streamlit as st
 from PIL import Image
 
-from pages.data import session_logs, photo_db, initialize_session_state
-from pages.home import home_page
-from pages.login import login_page
-from pages.register import register_page
-from pages.upload_photos import upload_photos_page
-from pages.start_session import start_session_page
-from pages.settings import settings_page
+from components.data import session_logs, photo_db, initialize_session_state
+from components.home import home_page
+from components.login import login_page
+from components.register import register_page
+from components.upload_photos import upload_photos_page
+# from components.start_session import start_session
+from components.settings import settings_page
 
 def display_audio5(st):
     import os
-    html_file_path = os.path.join("pages", "listen.html")
+    html_file_path = os.path.join("components", "listen.html")
     with open(html_file_path, "r") as f:
         html_content = f.read()
 

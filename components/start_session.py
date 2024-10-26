@@ -2,7 +2,7 @@
 
 import os
 import streamlit as st
-from pages.utils import ai_generate_prompt, ai_process_response, log_session
+from components.utils import ai_generate_prompt, ai_process_response, log_session
 
 """
 def start_session_page(st, session_logs):

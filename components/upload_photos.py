@@ -15,7 +15,7 @@ from sentence_transformers import SentenceTransformer
 embed_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate("./pages/config/creds.json")
+    cred = credentials.Certificate("./components/config/creds.json")
     firebase_admin.initialize_app(cred, {
         "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
         "storageBucket": "ai-atl-new.appspot.com"
