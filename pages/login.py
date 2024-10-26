@@ -23,7 +23,7 @@ def login_page(st):
             redirect_uri="http://localhost:8501/",
             scope="openid email profile",
             key="google",
-            extras_params={"prompt": "consent", "access_type": "offline"},
+            extras_params={"access_type": "offline"},
             use_container_width=True,
             pkce="S256",
         )
