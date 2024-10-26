@@ -1,10 +1,12 @@
 FROM python:3.10-slim
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y \
+    libasound-dev \
+    build-essential \
+    python3-pyaudio \
+    python3-dev \
     portaudio19-dev \
-    && apt-get install -y ffmpeg \
-    && apt-get install python3-pyaudio \
-    && apt-get install python3-dev
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # RUN apt-get install python3-pyaudio python3-dev portaudio19-dev

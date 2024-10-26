@@ -14,8 +14,8 @@ from pages.settings import settings_page
 import threading
 from streamlit_autorefresh import st_autorefresh
 
-from microphone_stream import MicrophoneStream, RATE, CHUNK
-from speech_recognition import start_recognition
+from resources.microphone_stream import MicrophoneStream, RATE, CHUNK
+from resources.speech_recognition import start_recognition
 
 class TranscriptionManager:
     def __init__(self):
