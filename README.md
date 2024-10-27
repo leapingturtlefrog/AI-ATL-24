@@ -27,6 +27,13 @@ Take down the container
 terraform destroy
 ```
 
+
 ## Here are some images of the app
 <br />
+
 ![Example Image1](./examples/example1.png)
+![Example Image2](./examples/example2.png)
+![Example Image3](./examples/example3.png)
+![Example Image4](./examples/example4.png)
+![Example Image5](./examples/example5.png)
+
