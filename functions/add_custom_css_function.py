@@ -17,6 +17,9 @@ def add_custom_css(st):
         text-decoration: none;
         color: black !important;
     }
+    audio {
+        visibility: hidden;
+    }
     </style>
     """,
     unsafe_allow_html=True
