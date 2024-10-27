@@ -262,7 +262,7 @@ def render_html():
                 </script>
             </head>
             <body>
-                <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
+                <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5" style="display: none;"/>
                 <button id="startBtn">Start Recording</button>
                 <button id="stopBtn">Stop Recording</button>
             </body>
