@@ -63,7 +63,7 @@ def main():
             # TODO: hardcoding metrics for now - change later
             import random
             metrics = {i:[random.randint(1, 60), random.randint(1, 60), random.randint(1, 60)] for i in range(1, 10)}
-            home_page(st, metrics, "PUT NAME HERE")
+            home_page(st, metrics)
         case "session":
             start_session_page(st, "")
         case "profile":

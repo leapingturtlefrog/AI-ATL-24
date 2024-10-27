@@ -188,7 +188,7 @@ def transcribe_audio(uploaded_file):
         os.remove(temp_file_path)
         return ''
 
-def render_html(img_href):
+def render_html():
     html = f"""
             <!DOCTYPE html>
             <html lang="en">
@@ -268,7 +268,6 @@ def render_html(img_href):
             </body>
             </html>
             """
-    st.image(img_href)
     return html
     
 current_dir = os.path.dirname(__file__)
@@ -281,8 +280,9 @@ visited = []
 def init_render(random_description, selected_image):
     # return text   
     text_response = call_gemini(random_description)
-    html = render_html(selected_image)
+    html = render_html()
     st.components.v1.html(html, height=600, scrolling=True)
+    st.image(selected_image)
     hint_title = text_response
 
 
@@ -336,7 +336,7 @@ def start_session_page(st, metrics):
                 stream=False
             )
             chatbot_response = response_chatbot.text.strip()
-            conversation_history.append({'text': f"Chatbot: {chatbot_response}\n"})
+            conversation_history.append({'text': f"{chatbot_response}\n"})
             print(chatbot_response)
             synthesis_input = texttospeech.SynthesisInput(text=chatbot_response)
             voice = texttospeech.VoiceSelectionParams(

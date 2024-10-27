@@ -38,6 +38,7 @@ def sign_in_or_register_page(st):
             st.session_state["auth"] = payload["email"]
             st.session_state["token"] = result["token"]
             st.session_state["patient_name"] = payload["name"]
+            st.session_state["patient_first_name"] = payload["name"].split(" ")[0]
             print(st.session_state.patient_name)
             st.session_state.signed_in = True
             st.session_state.page = "home"
