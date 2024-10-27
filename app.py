@@ -35,10 +35,7 @@ with open("./components/styles.css") as f:
 def fetch_metrics():
     ref = db.reference("metrics")
     data = ref.get()
-    parsed_metrics = {k: v for k, v in data.items()}
-    # image_dict = {entry["description"]: entry["image_url"] for entry in data.values()}
-    print(data)
-    print(parsed_metrics)
+    parsed_metrics = {i + 1: list(data[i].values()) for i in range(len(data))}
     return parsed_metrics
 
 def main():
@@ -78,6 +75,7 @@ def main():
             largest_keys = sorted(metrics.keys(), reverse=True)[:10]
             sorted_metrics = {key: metrics[key] for key in largest_keys}
             sorted_metrics = dict(sorted(sorted_metrics.items()))
+            print(sorted_metrics)
             home_page(st, sorted_metrics)
         case "session":
             start_session_page(st)
