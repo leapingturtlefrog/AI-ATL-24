@@ -10,6 +10,8 @@ from components.profile import profile_page
 from components.play_audio import play_audio_page
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
+import firebase_admin
+from firebase_admin import credentials, db, storage
 
 
 if not firebase_admin._apps:
@@ -74,11 +76,12 @@ def main():
         
     match st.session_state.page:
         case "home":
-            metrics = fetch_metrics()
-            largest_keys = sorted(metrics.keys(), reverse=True)[:10]
-            sorted_metrics = {key: metrics[key] for key in largest_keys}
-            sorted_metrics = dict(sorted(sorted_metrics.items()))
-            home_page(st, sorted_metrics)
+            # metrics = fetch_metrics()
+            # largest_keys = sorted(metrics.keys(), reverse=True)[:10]
+            # sorted_metrics = {key: metrics[key] for key in largest_keys}
+            # sorted_metrics = dict(sorted(sorted_metrics.items()))
+            #home_page(st, sorted_metrics)
+            home_page(st, {})
         case "session":
             start_session_page(st)
         case "profile":
