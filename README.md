@@ -1,4 +1,5 @@
-# Cognisense: A conversational assistant that revitalizes memories, fosters deep emotional connections, and empowers Alzheimer’s and Dementia care with intelligent, personalized therapy.
+# Cognisense: 
+## A conversational assistant that revitalizes memories, fosters deep emotional connections, and empowers Alzheimer’s and Dementia care with intelligent, personalized therapy.
 
 ## Our project for the AI ATL 2024 Hackathon:
 
