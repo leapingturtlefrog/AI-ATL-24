@@ -17,11 +17,6 @@ def add_custom_css(st):
         text-decoration: none;
         color: black !important;
     }
-    button:focus {
-        outline: none !important;
-        box-shadow: none !important;
-        color: black !important;
-    }
     </style>
     """,
     unsafe_allow_html=True
