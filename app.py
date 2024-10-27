@@ -32,9 +32,6 @@ def main():
     if "signed_in" not in st.session_state:
         st.session_state.signed_in = True
     
-    st.title("Memory Lane")
-    st.write("\n")
-   
     if st.session_state.signed_in:
         menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
     else:
@@ -59,7 +56,7 @@ def main():
     
     match st.session_state.page:
         case "home":
-            home_page(st, session_logs)
+            home_page(st, session_logs, "CHANGE ME")
         case "session":
             start_session_page(st, session_logs)
         case "profile":
