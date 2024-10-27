@@ -128,7 +128,7 @@ def profile_page(st, photo_db):
             st.error("Please enter a valid age.")
         age_error = True
     
-    st.button("Save Profile", on_click=save_profile_button(name_error, age_error))
+    st.button("Save Profile", on_click=lambda: save_profile_button(name_error, age_error))
     
     st.session_state.profile_viewed_once = True
 
@@ -138,28 +138,27 @@ def profile_page(st, photo_db):
     st.subheader("Upload Photos")
     st.write("Upload to your photo library.")
     uploaded_files = st.file_uploader("", accept_multiple_files=True, type=['png', 'jpg', 'jpeg'])
-
+    
+    image_hrefs = []
     if uploaded_files:
         st.session_state.photos_uploaded = True
-        st.write("Generating descriptions for photos...")
+        # st.write("Generating descriptions for photos...")
 
-        # Generate descriptions before uploading to Firebase
         descriptions = generate_descriptions(uploaded_files)
-        # Debugging: Output the descriptions to verify correct structure
-        st.write("Descriptions dictionary:", descriptions)
+        # st.write("Descriptions dictionary:", descriptions)
 
         if not descriptions or len(descriptions) < len(uploaded_files):
             st.error("Failed to generate descriptions or mismatch in file count.")
             return
 
 
-        st.write("Descriptions generated. Uploading files...")
+        # st.write("Descriptions generated. Uploading files...")
         embedding_dict = {}
 
         for idx, file in enumerate(uploaded_files):
             filename = os.path.basename(file.name)  # Define filename at the start of the loop
             description_key = f"image_{idx + 1}.jpg"  # Adjusted to match the "image_x.jpg" key format
-            st.write(f"Processing file {filename} with description key: {description_key}")
+            # st.write(f"Processing file {filename} with description key: {description_key}")
 
             file_description = descriptions.get(description_key, "No description available for this image")
 
@@ -171,13 +170,11 @@ def profile_page(st, photo_db):
             embedding_dict[filename] = embedding.tolist()
             '''
 
-            st.write(f"Description for {description_key}: {file_description}")
+            # st.write(f"Description for {description_key}: {file_description}")
 
-            # Generate a unique filename for Firebase Storage
             photo_id = str(uuid.uuid4())
-            st.write(f"Uploading file: {filename} as {photo_id}_{filename}")
+            # st.write(f"Uploading file: {filename} as {photo_id}_{filename}")
 
-            # Save the file temporarily and upload to Firebase Storage
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.read())
                 temp_file_path = temp_file.name
@@ -187,7 +184,8 @@ def profile_page(st, photo_db):
             blob.upload_from_filename(temp_file_path)
             blob.make_public()
             image_url = blob.public_url
-            st.write(f"File uploaded to: {image_url}")
+            image_hrefs.append(image_url)
+            # st.write(f"File uploaded to: {image_url}")
 
             # Delete the temporary file
             os.remove(temp_file_path)
@@ -199,9 +197,11 @@ def profile_page(st, photo_db):
             }
             test_photos_ref = db.reference("test_photos")
             test_photos_ref.child(photo_id).set(photo_entry)
-            st.write(f"Photo entry saved with ID {photo_id}")
+            # st.write(f"Photo entry saved with ID {photo_id}")
 
         st.success("Photos and descriptions uploaded successfully!")
+
+    display_photos_page(image_hrefs)
 
 
 def retrieve_photos():
@@ -241,22 +241,28 @@ def display_retrieved_photo(image_data, description):
     except Exception as e:
         st.error(f"Error displaying image: {e}")
 
-# Example usage of retrieval and display
-def display_photos_page():
+
+"""
+def display_photos_page(hrefs):
     st.subheader("Stored Photos")
 
-    # Retrieve all photos
-    photos = retrieve_photos()
+    for link in hrefs:
+        st.image(link)
+"""
 
-    if not photos:
-        st.write("No photos found in the database.")
-        return
 
-    # Display each photo with its description
-    for filename, data in photos.items():
-        st.write(f"File: {filename}")
-        display_retrieved_photo(data['image_data'], data['description'])
-        st.write("---")  # Separator between photos
+def display_photos_page(hrefs):
+    st.subheader("Stored Photos")
+
+    # Define the number of images per row
+    images_per_row = 4
+    
+    # Create rows of images
+    for i in range(0, len(hrefs), images_per_row):
+        cols = st.columns(images_per_row)
+        for j in range(images_per_row):
+            if i + j < len(hrefs):  # Check if the image exists
+                cols[j].image(hrefs[i + j], use_column_width='auto', width=100)
 
 def save_profile_button(name_error, age_error):
     if st.session_state.profile_viewed_once:
