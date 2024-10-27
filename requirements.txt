@@ -6,3 +6,7 @@ pyaudio==0.2.14
 fastapi==0.115.3
 uvicorn==0.32.0
 python-multipart==0.0.12
+google-generativeai==0.8.3
+google-cloud-texttospeech==2.20.0
+ipython==8.17.2
+ffmpeg-python==0.2.0
