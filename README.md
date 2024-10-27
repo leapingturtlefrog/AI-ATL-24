@@ -1,13 +1,19 @@
 # Cognisense: A conversational assistant that revitalizes memories, fosters deep emotional connections, and empowers Alzheimer’s and Dementia care with intelligent, personalized therapy.
+
 ## Our project for the AI ATL 2024 Hackathon:
 
 Cognisense is an innovative AI-driven application designed to help Alzheimer's and dementia patients reconnect with their memories and maintain relationships with loved ones. By leveraging advanced AI technologies, Cognisense provides a supportive, interactive experience for patients to explore their personal photo galleries and engage in meaningful conversations about their past.
-Key Features
-AI-powered image analysis and contextualization
-Interactive, voice-based conversations about personal memories
-Personalized memory prompts based on cutting-edge Alzheimer's research
-Progress tracking and analytics for caregivers and healthcare professionals
-Secure storage and management of personal photo galleries
+
+### Key Features
+- AI-powered image analysis and contextualization
+- Interactive, voice-based conversations about personal memories
+- Personalized memory prompts based on cutting-edge Alzheimer's research
+- Progress tracking and analytics for caregivers and healthcare professionals
+- Secure storage and management of personal photo galleries
+
+<br />
+
+### Run the code
 
 <br />
 
