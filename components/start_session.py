@@ -131,8 +131,7 @@ def transcribe_audio(uploaded_file):
             {'text': 'Transcription: '}
         ]
     }]
-
-
+    
     def upload_file_data(file_data):
         print("inside upload file data")
         mime_type = file_data["mime_type"]
@@ -270,7 +269,7 @@ def render_html():
                                 console.log("Recording stopped...");
                             }};
                         }}
-
+                        
                         function sendAudioToServer(blob) {{
                             var formData = new FormData();
                             formData.append('audio', blob, 'audio_chunk_' + Date.now() + '.webm');
@@ -300,7 +299,6 @@ def render_html():
             """
     return html
 
-    
 current_dir = os.path.dirname(__file__)
 audio_folder = "uploaded_audio"
 audio_directory_path = os.path.join(current_dir, "..", audio_folder)
@@ -389,4 +387,4 @@ def start_session_page(st, metrics):
             os.remove(mp3_file_path)
             audio_files = []
             time.sleep(0.5)
-            print(conversation_history)
+ 
