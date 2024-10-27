@@ -24,7 +24,9 @@ def initialize_session_state():
         st.session_state.photos_uploaded = False
     if 'analyzed_photos' not in st.session_state:
         st.session_state.analyzed_photos = []
-    if 'session_history' not in st.session_state:
-        st.session_state.session_history = []
+    if 'conversation_history' not in st.session_state:
+        st.session_state.conversation_history = []
+    if 'metrics' not in st.session_state:
+        st.session_state.metrics = {}
     if 'current_photo' not in st.session_state:
         st.session_state.current_photo = None
