@@ -14,8 +14,6 @@ def sign_out(st):
     if 'token' in st.session_state:
         del st.session_state.token
     
-    st.rerun()
-    
     '''
     st.session_state.logged_in = False
     st.session_state.logged_out_recently = True

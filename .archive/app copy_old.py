@@ -32,30 +32,34 @@ def main():
     if "signed_in" not in st.session_state:
         st.session_state.signed_in = True
     
-    st.title("Memory Lane")
-    st.write("\n")
+    st.title("Memory Lane\n")
    
     if st.session_state.signed_in:
         menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
     else:
-        menu = ["Sign in"]
+        menu = ["Sign in or Register"]
     
     add_custom_css(st)
     
     with st.sidebar:
         if st.session_state.signed_in:
-            st.button("Home", on_click=home_button, key=1)
-            st.button("Start Session", on_click=session_button, key=2)
-            st.button("Profile", on_click=profile_button, key=3)
-            st.button("Sign out", on_click=sign_out_button, key=4)
+            if st.button("Home"):
+                st.session_state.page = "home"
+                st.session_state.sidebar_visible = False
+            elif st.button("Start Session"):
+                st.session_state.page = "session"
+                st.session_state.sidebar_visible = False
+            elif st.button("Profile"):
+                st.session_state.page = "profile"
+            elif st.button("Sign Out"):
+                sign_out(st)
+                st.session_state.page = "sign_in_or_register"
         else:
-            st.button("Sign in", on_click=sign_in_button, key=5)
+            if st.button("Please sign in or Register"):
+                st.session_state.page = "sign_in_or_register"
     
     if "page" not in st.session_state:
-        if st.session_state.signed_in:
-            st.session_state.page = "home"
-        else:
-            st.session_state.page = "sign_in_or_register"
+        st.session_state.page = "sign_in_or_register"
     
     match st.session_state.page:
         case "home":
@@ -68,22 +72,6 @@ def main():
             sign_in_or_register_page(st)
         case _:
             print("Selection not available.")
-
-def home_button():
-    st.session_state.page = "home"
-
-def session_button():
-    st.session_state.page = "session"
-
-def profile_button():
-    st.session_state.page = "profile"
-
-def sign_out_button():
-    sign_out(st)
-    st.session_state.page = "sign_in_or_register"
-
-def sign_in_button():
-    st.session_state.page = "sign_in_or_register"
 
 if __name__ == "__main__":
     main()

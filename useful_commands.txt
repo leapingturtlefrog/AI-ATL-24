@@ -16,6 +16,7 @@ docker images               : list all docker images
 docker ps -a                : list all docker containers
 docker container prune      : remove all nonactive containers
 docker kill container_a     : stop container named container_a
+dockr system prune -a       : remove all stopped containers, images, networks, etc
 
 # GITHUB
 git clone https://github.com/username/repository-name.git
