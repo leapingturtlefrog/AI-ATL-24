@@ -5,6 +5,8 @@ from components.start_session import start_session_page
 import google.generativeai as genai  # Import Gemini API
 import google.auth  
 import google.auth.transport.requests  
+import firebase_admin
+from firebase_admin import db, credentials, storage
 
 model = 'gemini-1.5-flash'
 generation_config = {
@@ -13,6 +15,15 @@ generation_config = {
     'top_k': 40,
     'max_output_tokens': 256
 }
+
+if not firebase_admin._apps:
+    cred = credentials.Certificate("./components/config/creds.json")
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
+        "storageBucket": "ai-atl-new.appspot.com"
+    })
+    db_ref = db.reference("/") 
+    bucket = storage.bucket() 
 
 def home_page(st, metrics):
     # Add custom CSS for larger font, padding, and text alignment
@@ -42,38 +53,27 @@ def home_page(st, metrics):
 
     # Display welcome title with larger font
     st.markdown(f"<div class='welcome-title'>Welcome Back, {st.session_state.patient_first_name}!</div>", unsafe_allow_html=True)
-
-    # Initialize conversation_history as an empty list
-    conversation_history = []
-
-    # Check if 'conversation_history.txt' exists
-    if os.path.exists('conversation_history.txt'):
-        # Read the conversation history
-        with open('conversation_history.txt', 'r') as f:
-            conversation_history = f.readlines()
-        
-        # Convert the list of lines to a single string for prompt creation
-        conversation_text = ''.join(conversation_history)
-        
-        # Create the prompt for Gemini
+    
+    conversation_history = db.reference("conversation_histories").get()
+    
+    conversation_text = ""
+    
+    for outer in conversation_history:
+        for conversation in outer:
+            conversation_text += conversation["text"]
+    
+    if conversation_text == "":
+        output_text = "I don't believe we've had a chance to get to know each other!\nStart a new session to start!"
+    else:
         prompt = f"Start off with a small greeting and how you are excited to begin today, then, in a couple bullet points with no description, give some positive things to work on today using this conversation history:\n{conversation_text}"
-        
-        # Initialize Gemini model
         gemini_model = genai.GenerativeModel(model_name=model)
-        
-        # Generate suggestions using Gemini
         response = gemini_model.generate_content(
             [{'text': prompt}],
             generation_config=generation_config,
             stream=False
         )
-        
-        # Extract the generated text
         output_text = response.text.strip()
-    else:
-        # If the conversation history file doesn't exist
-        output_text = "I don't believe we've had a chance to get to know each other!\nStart a new session to start!"
-
+    
     # Existing metrics code
     metrics_df = pd.DataFrame.from_dict(metrics, orient="index", columns=["Time Spent", "Pictures Seen", "Responses"])
 
