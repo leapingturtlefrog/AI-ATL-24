@@ -5,15 +5,10 @@ from firebase_admin import db, credentials, storage
 from components.data import metrics, photo_db, initialize_session_state
 from components.home import home_page
 from components.sign_in_or_register import sign_in_or_register_page
-from components.register import register_page
-from components.upload_photos import upload_photos_page
 from components.start_session import start_session_page
 from components.profile import profile_page
-from components.play_audio import play_audio_page
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
-import firebase_admin
-from firebase_admin import credentials, db, storage
 
 st.set_page_config(
     page_title="Congnisense",

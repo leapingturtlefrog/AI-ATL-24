@@ -1,12 +1,10 @@
 import os
 import streamlit as st
-from components.utils import ai_generate_prompt, ai_process_response, log_session
 import random
 from firebase_admin import db
 from google.cloud import texttospeech
 import google.generativeai as genai
 import mimetypes
-from IPython.display import display, Markdown, Audio
 import pathlib
 import tempfile
 import ffmpeg
