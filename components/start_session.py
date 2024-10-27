@@ -64,12 +64,11 @@ def select_random_description(image_dict):
 
 def call_gemini(photo_description):
     initial_prompt = (
-        "You are a caring caretaker and doctor for this alzheimers patient. Based on the following photo description, generate a caring and playful hint "
-    "as if discussing the photo with a friend that is brief but helps the patient remember their experience in the photo. Use phrases like 'Remember that photo?', "
-    "'That's such a great,' or 'wonderful, (light question)?' Except it has to be about the specific picture. be comforting and be therapist-esc.\n\n"
+        "You are a caring caretaker for this alzheimers patient. Based on the following photo description, generate a caring and playful hint "
+    "as if discussing the photo with a friend that is brief but helps the patient remember their experience in the photo. Except it has to be about the specific picture. Be comforting and be therapist-esc.\n\n"
     f"{photo_description}"
     )
-
+    
     gais_contents = [{
         'parts': [
             {'text': initial_prompt}
@@ -367,6 +366,7 @@ def start_session_page(st, metrics):
                 stream=False
             )
             chatbot_response = response_chatbot.text.strip()
+            chatbot_response = chatbot_response.split("\n")[0]
             conversation_history.append({'text': f"{chatbot_response}\n"})
             print(chatbot_response)
             synthesis_input = texttospeech.SynthesisInput(text=chatbot_response)
@@ -389,3 +389,4 @@ def start_session_page(st, metrics):
             os.remove(mp3_file_path)
             audio_files = []
             time.sleep(0.5)
+            print(conversation_history)
