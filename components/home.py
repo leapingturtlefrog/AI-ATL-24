@@ -1,8 +1,8 @@
 import pandas as pd
 from components.start_session import start_session_page
 
-def home_page(st, metrics, name):
-    st.title(f"Welcome Back, {name}!")
+def home_page(st, metrics):
+    st.title(f"Welcome Back, {st.session_state.patient_first_name}!")
 
     # TODO: fix session logs
     # session_logs = ""

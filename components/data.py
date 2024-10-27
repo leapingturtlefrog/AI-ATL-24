@@ -16,6 +16,8 @@ def initialize_session_state():
         st.session_state.patient_name = ''
     if 'patient_age' not in st.session_state:
         st.session_state.patient_age = ''
+    if 'patient_first_name' not in st.session_state:
+        st.session_state.patient_first_name = ''
     if 'caregiver_name' not in st.session_state:
         st.session_state.caregiver_name = ''
     if 'photos_uploaded' not in st.session_state:
