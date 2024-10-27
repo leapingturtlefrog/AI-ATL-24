@@ -265,11 +265,10 @@ def render_html(img_href):
                 <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
                 <button id="startBtn">Start Recording</button>
                 <button id="stopBtn">Stop Recording</button>
-                <br><br>
-                <img id="myImage" src="{img_href}" alt="image" />
             </body>
             </html>
             """
+    st.image(img_href)
     return html
     
 current_dir = os.path.dirname(__file__)

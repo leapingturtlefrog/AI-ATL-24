@@ -8,7 +8,6 @@ from components.upload_photos import upload_photos_page
 from components.start_session import start_session_page
 from components.profile import profile_page
 from components.play_audio import play_audio_page
-
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
 
