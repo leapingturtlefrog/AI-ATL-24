@@ -26,3 +26,7 @@ Take down the container
 ```
 terraform destroy
 ```
+
+## Here are some images of the app
+<br />
+![Example Image1](examples/example1.png)
