@@ -59,7 +59,7 @@ def main():
             metrics = {i:[random.randint(1, 60), random.randint(1, 60), random.randint(1, 60)] for i in range(1, 10)}
             home_page(st, metrics)
         case "session":
-            start_session_page(st, "")
+            start_session_page(st)
         case "profile":
             profile_page(st, photo_db)
         case "sign_in_or_register":
