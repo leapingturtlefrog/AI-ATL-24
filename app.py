@@ -11,6 +11,16 @@ from components.play_audio import play_audio_page
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
 
+
+if not firebase_admin._apps:
+    cred = credentials.Certificate("./components/config/creds.json")
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
+        "storageBucket": "ai-atl-new.appspot.com"
+    })
+    db_ref = db.reference("/")
+    bucket = storage.bucket()
+
 st.set_page_config(
     page_title="CareConnect",
     page_icon="./static/icon.svg",
@@ -20,6 +30,16 @@ st.set_page_config(
 
 with open("./components/styles.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+def fetch_metrics():
+    ref = db.reference("metrics")
+    data = ref.get()
+    parsed_metrics = {k: v for k, v in data.items()}
+    # image_dict = {entry["description"]: entry["image_url"] for entry in data.values()}
+    print(data)
+    print(parsed_metrics)
+    return parsed_metrics
 
 def main():
     initialize_session_state()
@@ -54,12 +74,13 @@ def main():
         
     match st.session_state.page:
         case "home":
-            # TODO: hardcoding metrics for now - change later
-            import random
-            metrics = {i:[random.randint(1, 60), random.randint(1, 60), random.randint(1, 60)] for i in range(1, 10)}
-            home_page(st, metrics)
+            metrics = fetch_metrics()
+            largest_keys = sorted(metrics.keys(), reverse=True)[:10]
+            sorted_metrics = {key: metrics[key] for key in largest_keys}
+            sorted_metrics = dict(sorted(sorted_metrics.items()))
+            home_page(st, sorted_metrics)
         case "session":
-            start_session_page(st, "")
+            start_session_page(st)
         case "profile":
             profile_page(st, photo_db)
         case "sign_in_or_register":

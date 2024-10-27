@@ -325,7 +325,9 @@ def read_mp3(path):
         mp3_data = mp3_f.read()
     return mp3_data
 
-def start_session_page(st, metrics):
+def start_session_page(st):
+    start_time = time.time()
+    images_count, responses = 1, 1
     gemini_chatbot = genai.GenerativeModel(model_name=model)
     unique_key = str(uuid.uuid4())
     next_image = st.button("Next Image!", key=unique_key)
@@ -337,6 +339,7 @@ def start_session_page(st, metrics):
         if len(audio_files) == 1:
             print(True)
         if next_image:
+            images_count += 1
             while True:
                 random_description, selected_image = select_random_description(image_set)
                 if random_description not in visited:
@@ -344,6 +347,7 @@ def start_session_page(st, metrics):
                     break
             init_render(random_description, selected_image)
         if len(audio_files) == 1:
+            responses += 1
             # Process the new audio file(s)
             audio_file = audio_files[0]
             audio_file_path = os.path.join(audio_directory_path, audio_file)
@@ -396,3 +400,14 @@ def start_session_page(st, metrics):
             audio_files = []
             time.sleep(0.5)
             print(conversation_history)
+
+    
+    end_time = time.time()
+    total_time_seconds = end_time - start_time
+    
+    total_time_minutes = total_time_seconds / 60.0
+    images_count
+    responses
+
+
+
