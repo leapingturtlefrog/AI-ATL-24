@@ -11,12 +11,17 @@ from components.play_audio import play_audio_page
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
 
+
+
 st.set_page_config(
     page_title="Memory Lane",
     page_icon="🌟",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+with open("./components/styles.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def main():
     initialize_session_state()

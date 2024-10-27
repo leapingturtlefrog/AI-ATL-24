@@ -1,6 +1,11 @@
 [theme]
-primaryColor="#00BFFF"
-backgroundColor="#FFFAF0"
-secondaryBackgroundColor="#FED8B1" # "#F8DE7E" "#E6BE8A"
-textColor="#6EAEA1"
-font="sans serif"
+primaryColor = "#81D4FA"              # Light blue for primary actions
+backgroundColor = "#F0F8FF"           # Very light icy blue background
+secondaryBackgroundColor = "#DCEFFB"   # Slightly darker icy blue for sidebar
+textColor = "#3C4858"                 # Darker muted blue for readability
+font = "sans serif"
+
+highlightColor = "#A7C7E7"            # Accent color for subtle highlights
+buttonColor = "#81D4FA"
+sliderColor = "#B3E5FC"
+inputBoxColor = "#F0F8FF"

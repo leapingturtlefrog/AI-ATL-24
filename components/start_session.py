@@ -275,6 +275,7 @@ current_dir = os.path.dirname(__file__)
 audio_folder = "uploaded_audio"
 audio_directory_path = os.path.join(current_dir, "..", audio_folder)
 image_set = fetch_images_and_descriptions()
+visited = []
 # initial render every time next image is called 
 
 def init_render(random_description, selected_image):
@@ -295,13 +296,18 @@ def start_session_page(st, metrics):
     unique_key = str(uuid.uuid4())
     next_image = st.button("Next Image!", key=unique_key)
     random_description, selected_image, context_descriptions = select_random_description(image_set)
+    visited.append(random_description)
     init_render(random_description, selected_image)
     while True:
         audio_files = [f for f in os.listdir(audio_directory_path) if 'webm' in f]
         if len(audio_files) == 1:
             print(True)
         if next_image:
-            random_description, selected_image, context_descriptions = select_random_description(image_set)
+            while True:
+                random_description, selected_image = select_random_description(image_set)
+                if random_description not in visited:
+                    visited.append(random_description)
+                    break
             init_render(random_description, selected_image)
         if len(audio_files) == 1:
             # Process the new audio file(s)
