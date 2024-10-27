@@ -18,7 +18,7 @@ def add_custom_css(st):
         color: black !important;
     }
     audio {
-        visibility: hidden;
+        display: none;
     }
     </style>
     """,
