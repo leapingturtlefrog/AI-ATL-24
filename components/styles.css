@@ -8,10 +8,12 @@
     --background: #ffffff;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
 body {
     background-color: var(--background);
     color: var(--text);
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Inter', sans-serif; 
     line-height: 1.6;
     margin: 0;
     padding: 0;

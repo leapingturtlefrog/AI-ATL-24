@@ -101,6 +101,9 @@ def call_gemini(photo_description):
         audio_bytes = audio_file.read()
         st.audio(audio_bytes, format='audio/mp3', start_time=0, autoplay=True)
     conversation_history.append({'text': f"Chatbot: {ai_description}\n"})
+    with open('conversation_history.txt', 'w') as f:
+        for entry in conversation_history:
+            f.write(entry['text'] + '\n')
     return ai_description
 
 def transcribe_audio(uploaded_file):
@@ -368,6 +371,9 @@ def start_session_page(st, metrics):
             chatbot_response = response_chatbot.text.strip()
             chatbot_response = chatbot_response.split("\n")[0]
             conversation_history.append({'text': f"{chatbot_response}\n"})
+            with open('conversation_history.txt', 'w') as f:
+                for entry in conversation_history:
+                    f.write(entry['text'] + '\n')
             print(chatbot_response)
             synthesis_input = texttospeech.SynthesisInput(text=chatbot_response)
             voice = texttospeech.VoiceSelectionParams(

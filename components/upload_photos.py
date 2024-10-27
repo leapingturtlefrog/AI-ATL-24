@@ -163,7 +163,7 @@ def upload_photos_page(st, photo_db):
             # Store image URL and description in Realtime Database
             photo_entry = {
                 'image_url': image_url,
-                'description': file_description, # Add embedding value somehow (numpy array)
+                'description': file_description,
             }
             test_photos_ref = db.reference("test_photos")
             test_photos_ref.child(photo_id).set(photo_entry)
