@@ -1,6 +1,6 @@
 import streamlit as st
 
-from components.data import session_logs, photo_db, initialize_session_state
+from components.data import metrics, photo_db, initialize_session_state
 from components.home import home_page
 from components.sign_in_or_register import sign_in_or_register_page
 from components.register import register_page
@@ -63,9 +63,9 @@ def main():
     
     match st.session_state.page:
         case "home":
-            home_page(st, session_logs)
+            home_page(st, metrics)
         case "session":
-            start_session_page(st, session_logs)
+            start_session_page(st, metrics)
         case "profile":
             profile_page(st, photo_db)
         case "sign_in_or_register":
