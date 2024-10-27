@@ -392,14 +392,12 @@ def start_session_page(st):
             audio_files = []
             time.sleep(0.5)
             print(conversation_history)
-
-    
-    end_time = time.time()
-    total_time_seconds = end_time - start_time
-    
-    total_time_minutes = total_time_seconds / 60.0
-    images_count
-    responses
-
-
-
+            st.session_state.conversation_history = conversation_history
+            end_time = time.time()
+            total_time_seconds = end_time - start_time
+            total_time_minutes = total_time_seconds / 60.0
+            st.session_state.metrics = {
+                "total_time_minutes": total_time_minutes,
+                "images_count": images_count,
+                "responses": responses
+            }
