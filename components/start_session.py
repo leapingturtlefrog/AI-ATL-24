@@ -268,7 +268,6 @@ def render_html():
             </body>
             </html>
             """
-    st.image(img_href)
     return html
     
 current_dir = os.path.dirname(__file__)
