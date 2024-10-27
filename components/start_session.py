@@ -195,6 +195,36 @@ def render_html():
             <head>
                 <meta charset="ISO-8859-1">
                 <title>Session</title>
+                <style>
+                    /* Reset body margins to prevent pushing other content */
+                    body {{
+                        margin: 0;
+                        padding: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                    }}
+
+                    /* Button styling */
+                    .btn {{
+                        background-color: #a7d8ff;   /* Primary color */
+                        border: none;
+                        border-radius: 4px;
+                        color: #1a3c6e;             /* Accent color for text */
+                        cursor: pointer;
+                        font-size: 16px;
+                        padding: 10px 20px;
+                        transition: background-color 0.3s ease, color 0.3s ease;
+                        display: inline-block;       /* Inline block to prevent stacking */
+                        margin: 5px;                 /* Small spacing between buttons */
+                    }}
+
+                    .btn:hover {{
+                        background-color: #4da3ff;   /* Darker shade on hover */
+                        color: #ffffff;             /* White text on hover */
+                    }}
+                </style>
                 <script type="text/javascript">
                     var webaudio_tooling_obj = function () {{
                         var audioContext = new AudioContext();
@@ -262,13 +292,15 @@ def render_html():
                 </script>
             </head>
             <body>
-                <input id="volume" type="range" min="0" max="1" step="0.1" value="0.5"/>
-                <button id="startBtn">Start Recording</button>
-                <button id="stopBtn">Stop Recording</button>
+                <div id="controls">
+                    <button id="startBtn" class="btn">Start Recording</button>
+                    <button id="stopBtn" class="btn">Stop Recording</button>
+                </div>
             </body>
             </html>
             """
     return html
+
     
 current_dir = os.path.dirname(__file__)
 audio_folder = "uploaded_audio"
@@ -279,10 +311,10 @@ visited = []
 
 def init_render(random_description, selected_image):
     # return text   
+    st.image(selected_image)
     text_response = call_gemini(random_description)
     html = render_html()
     st.components.v1.html(html, height=600, scrolling=True)
-    st.image(selected_image)
     hint_title = text_response
 
 
