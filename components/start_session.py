@@ -11,60 +11,8 @@ import pathlib
 import tempfile
 import ffmpeg
 import uuid
+import time
 
-
-"""
-def start_session_page(st, session_logs):
-    st.subheader("Start Reminiscence Session")
-    if not st.session_state.analyzed_photos:
-        st.error("Please upload and process photos before starting a session.")
-        return
-
-    st.write("Select a theme for the session or let the AI choose:")
-    themes = ["Family", "Travel", "Friends", "Events", "Random"]
-    selected_theme = st.selectbox("Choose a theme", themes)
-
-    if st.button("Start Session"):
-        st.session_state.session_history = []
-        st.session_state.current_photo = None
-        st.experimental_rerun()
-
-    if st.session_state.session_history == []:
-        # Start new session
-        st.session_state.current_photo = st.session_state.analyzed_photos[0]
-        st.session_state.session_history.append({
-            'photo': st.session_state.current_photo,
-            'ai_prompt': ai_generate_prompt(st.session_state.current_photo, st.session_state.session_history),
-            'patient_response': '',
-        })
-    else:
-        # Continue session
-        current_interaction = st.session_state.session_history[-1]
-        st.image(current_interaction['photo']['image'], use_column_width=True)
-        st.write(f"AI Assistant: {current_interaction['ai_prompt']}")
-        patient_response = st.text_input("Your Response", key=f"response_{len(st.session_state.session_history)}")
-        if st.button("Submit Response"):
-            current_interaction['patient_response'] = patient_response
-            # AI processes response
-            ai_reply = ai_process_response(patient_response, st.session_state.session_history)
-            st.write(f"AI Assistant: {ai_reply}")
-            # Move to next photo
-            next_index = len(st.session_state.session_history)
-            if next_index < len(st.session_state.analyzed_photos):
-                st.session_state.current_photo = st.session_state.analyzed_photos[next_index]
-                st.session_state.session_history.append({
-                    'photo': st.session_state.current_photo,
-                    'ai_prompt': ai_generate_prompt(st.session_state.current_photo, st.session_state.session_history),
-                    'patient_response': '',
-                })
-            else:
-                st.success("Session completed!")
-                # Log session
-                log_session(st, session_logs)
-                if st.button("Return to Dashboard"):
-                    st.experimental_rerun()
-
-"""
 conversation_history = [
         {
             'text': "You are a caring and therapeutic caretake for alzheimers patients meant to help them remember context of their memories through images they show you."
@@ -229,95 +177,8 @@ def transcribe_audio(uploaded_file):
         os.remove(temp_file_path)
         return ''
 
-def start_session_page(st, session_logs):
-    current_dir = os.path.dirname(__file__)
-    audio_folder = "uploaded_audio"
-    audio_directory_path = os.path.join(current_dir, "..", audio_folder)
-    image_set = fetch_images_and_descriptions()
-    random_description, selected_image, context_descriptions = select_random_description(image_set)
-    # return text   
-    text_response = call_gemini(random_description)
-    # somehow show this as a response here
-
-    audio_files = [True]
-    while True:
-        img_href = selected_image
-        hint_title = text_response
-        # st.success(text_response)
-        if len(audio_files) > 0:
-            print("found a file")
-            print(len(audio_files))
-            # Process the new audio file(s)
-            for audio_file in audio_files:
-                print(audio_files)
-                if isinstance(audio_file, bool):
-                    print("failure")
-                    break
-                # Here you can process the audio file if needed
-                audio_folder = "uploaded_audio"
-                current_dir = os.path.dirname(__file__)
-                audio_directory_path = os.path.join(current_dir, "..", audio_folder)
-                audio_file_path = os.path.join(audio_directory_path, audio_file)
-                st.audio(audio_file_path, format="audio/webm")
-                with open(audio_file_path, 'rb') as f:
-                    file_data = f.read()
-                    print(file_data)
-                # Determine the file name and pass it to the transcribe_audio function
-                file_name = os.path.basename(audio_file)
-                print("file captured")
-                input_file = {"name": file_name, "data": file_data}
-                convert_to_mp3(audio_file_path, 'output_file.mp3')
-                
-                # Update the mp3_file_path and read it
-                mp3_file_path = os.path.abspath('output_file.mp3')
-                with open(mp3_file_path, 'rb') as mp3_f:
-                    mp3_data = mp3_f.read()
-                
-                uploaded_file = {"name": 'output_file.mp3', "data": mp3_data}
-                user_input = transcribe_audio(uploaded_file=uploaded_file)
-                print(user_input)
-                conversation_history.append({'text': f"User: {user_input}\n"})
-                gais_contents = [{
-                    'parts': conversation_history + [{'text': "Chatbot: "}]
-                }]
-                gemini_chatbot = genai.GenerativeModel(model_name=model)
-                response_chatbot = gemini_chatbot.generate_content(
-                    gais_contents,
-                    generation_config=generation_config,
-                    stream=False
-                )
-                chatbot_response = response_chatbot.text.strip()
-                conversation_history.append({'text': f"Chatbot: {chatbot_response}\n"})
-                # display response to question
-                print(chatbot_response)
-                synthesis_input = texttospeech.SynthesisInput(text=chatbot_response)
-                voice = texttospeech.VoiceSelectionParams(
-                    language_code="en-US",
-                    ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-                )
-                audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
-                response_tts = tts_client.synthesize_speech(input=synthesis_input, voice=voice, audio_config=audio_config)
-
-                response_audio = 'output.mp3'
-                with open(response_audio, 'wb') as out:
-                    out.write(response_tts.audio_content)
-
-                # Get the full path to the audio file
-                response_file_path = os.path.abspath(response_audio)
-
-                # Play the audio file in Streamlit
-                with open(response_file_path, 'rb') as response_audio_file:
-                    audio_bytes = response_audio_file.read()
-                    st.audio(audio_bytes, format='audio/mp3', start_time=0)
-
-                # Clear the image reference
-                img_href = ""
-
-                # Remove the processed audio file
-                os.remove(response_file_path)
-
-            # Create the HTML content
-            html = f"""
+def render_html(img_href):
+    html = f"""
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -398,14 +259,86 @@ def start_session_page(st, session_logs):
             </body>
             </html>
             """
-            if display_page(st, html):
-                random_description = select_random_description(image_set)
-                text_response = call_gemini(random_description)
-        audio_files = [f for f in os.listdir(audio_directory_path)]
-        
+    return html
+    
+current_dir = os.path.dirname(__file__)
+audio_folder = "uploaded_audio"
+audio_directory_path = os.path.join(current_dir, "..", audio_folder)
+image_set = fetch_images_and_descriptions()
+# initial render every time next image is called 
 
-def display_page(st, html_content):
+def init_render(random_description, selected_image):
+    # return text   
+    text_response = call_gemini(random_description)
+    html = render_html(selected_image)
+    st.components.v1.html(html, height=600, scrolling=True)
+    hint_title = text_response
+
+
+def read_mp3(path):
+    with open(path, 'rb') as mp3_f:
+        mp3_data = mp3_f.read()
+    return mp3_data
+
+def start_session_page(st, session_logs):
+    gemini_chatbot = genai.GenerativeModel(model_name=model)
     unique_key = str(uuid.uuid4())
     next_image = st.button("Next Image!", key=unique_key)
-    st.components.v1.html(html_content, height=600, scrolling=True)
-    return next_image
+    random_description, selected_image, context_descriptions = select_random_description(image_set)
+    init_render(random_description, selected_image)
+    while True:
+        audio_files = [f for f in os.listdir(audio_directory_path) if 'webm' in f]
+        if len(audio_files) == 1:
+            print(True)
+        if next_image:
+            random_description, selected_image, context_descriptions = select_random_description(image_set)
+            init_render(random_description, selected_image)
+        if len(audio_files) == 1:
+            # Process the new audio file(s)
+            audio_file = audio_files[0]
+            audio_file_path = os.path.join(audio_directory_path, audio_file)
+            st.audio(audio_file_path, format="audio/webm")
+            with open(audio_file_path, 'rb') as f:
+                file_data = f.read()
+            # Determine the file name and pass it to the transcribe_audio function
+            file_name = os.path.basename(audio_file)
+            input_file = {"name": file_name, "data": file_data}
+            convert_to_mp3(audio_file_path, 'output_file.mp3')
+            # Update the mp3_file_path and read it
+            mp3_file_path = os.path.abspath('output_file.mp3')
+            mp3_data = read_mp3(mp3_file_path)
+            uploaded_file = {"name": 'output_file.mp3', "data": mp3_data}
+            user_input = transcribe_audio(uploaded_file=uploaded_file)
+            print(user_input)
+            conversation_history.append({'text': f"User: {user_input}\n"})
+            gais_contents = [{
+                'parts': conversation_history + [{'text': "Chatbot: "}]
+            }]
+            response_chatbot = gemini_chatbot.generate_content(
+                gais_contents,
+                generation_config=generation_config,
+                stream=False
+            )
+            chatbot_response = response_chatbot.text.strip()
+            conversation_history.append({'text': f"Chatbot: {chatbot_response}\n"})
+            print(chatbot_response)
+            synthesis_input = texttospeech.SynthesisInput(text=chatbot_response)
+            voice = texttospeech.VoiceSelectionParams(
+                language_code="en-US",
+                ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            )
+            audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.MP3)
+            response_tts = tts_client.synthesize_speech(input=synthesis_input, voice=voice, audio_config=audio_config)
+            response_audio = 'output.mp3'
+            with open(response_audio, 'wb') as out:
+                out.write(response_tts.audio_content)
+            response_file_path = os.path.abspath(response_audio)
+
+            with open(response_file_path, 'rb') as response_audio_file:
+                audio_bytes = response_audio_file.read()
+            st.audio(audio_bytes, format='audio/mp3', start_time=0)
+            os.remove(audio_file_path)
+            os.remove(response_file_path)
+            os.remove(mp3_file_path)
+            audio_files = []
+            time.sleep(0.5)
