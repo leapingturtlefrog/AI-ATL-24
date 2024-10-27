@@ -32,9 +32,9 @@ terraform destroy
 <br />
 
 ![Example Image1](./examples/example5.png)
-![Example Image2](./examples/example2.png)
-![Example Image3](./examples/example3.png)
-![Example Image4](./examples/example4.png)
+![Example Image2](./examples/example3.png)
+![Example Image3](./examples/example4.png)
+![Example Image4](./examples/example2.png)
 ![Example Image5](./examples/example1.png)
 
 
