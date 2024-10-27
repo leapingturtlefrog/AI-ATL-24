@@ -1,5 +1,4 @@
 .streamlit/secrets.toml
 venv/
 __pycache__/
-/components/config/creds.json
 components/config/*.json

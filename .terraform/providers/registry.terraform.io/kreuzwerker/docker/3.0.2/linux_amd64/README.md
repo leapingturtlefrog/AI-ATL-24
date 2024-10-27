@@ -115,3 +115,4 @@ The Terraform Provider Docker is available to everyone under the terms of the Mo
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/kreuzwerker/terraform-provider-docker.svg)](https://starchart.cc/kreuzwerker/terraform-provider-docker)
+
