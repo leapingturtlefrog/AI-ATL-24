@@ -112,12 +112,20 @@ def profile_page(st, photo_db):
     
     name_error = False
     age_error = False
+    preferred_name_error = False
 
-    name_input = st.text_input("Name", value=st.session_state.patient_name)
+    name_input = st.text_input("Full Name", value=st.session_state.patient_name)
     st.session_state.patient_name = name_input
     
     if st.session_state.patient_name == '':
         name_error = True
+    
+    preferred_name_input = st.text_input("Preferred Name", value=st.session_state.patient_first_name)
+    if preferred_name_input != '':
+        st.session_state.patient_first_name = preferred_name_input
+        print("K" + st.session_state.patient_first_name + "J")
+    else:
+        preferred_name_error = True
     
     age_input = st.text_input("Age", value=st.session_state.patient_age)
     
@@ -128,7 +136,7 @@ def profile_page(st, photo_db):
             st.error("Please enter a valid age.")
         age_error = True
     
-    st.button("Save Profile", on_click=lambda: save_profile_button(name_error, age_error))
+    st.button("Save Profile", on_click=save_profile_button(name_error, age_error, preferred_name_error))
     
     st.session_state.profile_viewed_once = True
 
@@ -264,13 +272,21 @@ def display_photos_page(hrefs):
             if i + j < len(hrefs):  # Check if the image exists
                 cols[j].image(hrefs[i + j], use_column_width='auto', width=100)
 
-def save_profile_button(name_error, age_error):
+def save_profile_button(name_error, age_error, preferred_name_error):
     if st.session_state.profile_viewed_once:
-        if name_error and age_error:
-            st.error("Please input your name and age.")
-        elif name_error:
-            st.error("Please input your name.")
+        if name_error and preferred_name_error and age_error:
+            st.error("Please enter your name and age.")
+        elif name_error and preferred_name_error:
+            st.error("Please enter your full and preferrd names.")
+        elif name_error and age_error:
+            st.error("Please enter your full name and age.")
+        elif preferred_name_error and age_error:
+            st.error("Please enter your age and preferred name.")
         elif age_error:
-            st.error("Please input your age.")
+            st.error("Please enter your age.")
+        elif preferred_name_error:
+            st.error("Please enter your preferred name.")
+        elif name_error:
+            st.error("Please enter your full name.")
         else:
             st.success("Profile saved!")
