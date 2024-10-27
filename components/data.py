@@ -3,7 +3,7 @@ import streamlit as st
 
 # Dummy databases
 user_db = {}
-session_logs = {}
+metrics = {}
 photo_db = {}
 
 # Session state management
