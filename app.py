@@ -11,11 +11,9 @@ from components.play_audio import play_audio_page
 from functions.sign_out_function import sign_out
 from functions.add_custom_css_function import add_custom_css
 
-
-
 st.set_page_config(
-    page_title="Memory Lane",
-    page_icon="🌟",
+    page_title="CareConnect",
+    page_icon="./static/icon.svg",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -36,15 +34,11 @@ def main():
     if "profile_viewed_once" not in st.session_state:
         st.session_state.profile_viewed_once = False
     
-    if st.session_state.signed_in:
-        menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
-    else:
-        menu = ["Sign in"]
-    
     add_custom_css(st)
     
     with st.sidebar:
         if st.session_state.signed_in:
+            st.image("./static/icon.svg", caption="", width=40)
             st.button("Home", on_click=home_button, key=1)
             st.button("Start Session", on_click=session_button, key=2)
             st.button("Profile", on_click=profile_button, key=3)

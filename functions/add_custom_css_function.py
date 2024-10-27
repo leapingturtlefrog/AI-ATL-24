@@ -20,6 +20,12 @@ def add_custom_css(st):
     audio {
         display: none;
     }
+    .sidebar-icon {
+        width: 16px; 
+        height: 16px;
+        margin-bottom: 10px;
+        display: block;
+    }
     </style>
     """,
     unsafe_allow_html=True
