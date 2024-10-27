@@ -1,4 +1,6 @@
 import streamlit as st
+import firebase_admin
+from firebase_admin import db, credentials, storage
 
 from components.data import metrics, photo_db, initialize_session_state
 from components.home import home_page
@@ -13,16 +15,6 @@ from functions.add_custom_css_function import add_custom_css
 import firebase_admin
 from firebase_admin import credentials, db, storage
 
-
-if not firebase_admin._apps:
-    cred = credentials.Certificate("./components/config/creds.json")
-    firebase_admin.initialize_app(cred, {
-        "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
-        "storageBucket": "ai-atl-new.appspot.com"
-    })
-    db_ref = db.reference("/")
-    bucket = storage.bucket()
-
 st.set_page_config(
     page_title="CareConnect",
     page_icon="./static/icon.svg",
@@ -30,17 +22,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+if not firebase_admin._apps:
+    cred = credentials.Certificate("./components/config/creds.json")
+    firebase_admin.initialize_app(cred, {
+        "databaseURL": "https://ai-atl-new-default-rtdb.firebaseio.com/",
+        "storageBucket": "ai-atl-new.appspot.com"
+    })
+    db_ref = db.reference("/") 
+    bucket = storage.bucket() 
+
 with open("./components/styles.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
 
 def fetch_metrics():
     ref = db.reference("metrics")
     data = ref.get()
-    parsed_metrics = {k: v for k, v in data.items()}
-    # image_dict = {entry["description"]: entry["image_url"] for entry in data.values()}
-    print(data)
-    print(parsed_metrics)
+    parsed_metrics = {i + 1: list(data[i].values()) for i in range(len(data))}
     return parsed_metrics
 
 def main():
@@ -76,12 +73,12 @@ def main():
         
     match st.session_state.page:
         case "home":
-            # metrics = fetch_metrics()
-            # largest_keys = sorted(metrics.keys(), reverse=True)[:10]
-            # sorted_metrics = {key: metrics[key] for key in largest_keys}
-            # sorted_metrics = dict(sorted(sorted_metrics.items()))
-            #home_page(st, sorted_metrics)
-            home_page(st, {})
+            metrics = fetch_metrics()
+            largest_keys = sorted(metrics.keys(), reverse=True)[:10]
+            sorted_metrics = {key: metrics[key] for key in largest_keys}
+            sorted_metrics = dict(sorted(sorted_metrics.items()))
+            print(sorted_metrics)
+            home_page(st, sorted_metrics)
         case "session":
             start_session_page(st)
         case "profile":
@@ -92,21 +89,37 @@ def main():
             print("Selection not available.")
 
 def home_button():
+    if st.session_state.page == "session":
+        upload_user_data()
     st.session_state.page = "home"
 
 def session_button():
     st.session_state.page = "session"
 
 def profile_button():
+    if st.session_state.page == "session":
+        upload_user_data()
     st.session_state.profile_viewed_once = False
     st.session_state.page = "profile"
 
 def sign_out_button():
+    if st.session_state.page == "session":
+        upload_user_data()
     sign_out(st)
     st.session_state.page = "sign_in_or_register"
 
 def sign_in_button():
     st.session_state.page = "sign_in_or_register"
+
+def upload_user_data():
+    counter_ref = db.reference("counter")
+    counter_ref.child("counter").set(counter_ref.child("counter").get()+1)
+    number = counter_ref.child("counter").get()
+    metrics_ref = db.reference("metrics")
+    metrics_ref.child(str(number)).set(st.session_state.metrics)
+    conversations_histories_ref = db.reference("conversation_histories")
+    conversations_histories_ref.child(str(number)).set(st.session_state.conversation_history)
+    print("Uploaded data.")
 
 if __name__ == "__main__":
     main()
