@@ -108,20 +108,35 @@ def profile_page(st, photo_db):
     st.title("Profile")
     st.write("\n")
     st.subheader("Settings")
-    st.write("Configure your preferences.")
-
-    name = st.text_input("Your Name", value="", max_chars=50)
+    st.write("Configure your information.")
     
-    age = st.number_input("Your Age", min_value=0, max_value=120, value=None)
+    name_error = False
+    age_error = False
 
-    if st.button("Save Profile"):
-        st.success(f"New Profile Changes Saved!")
+    name_input = st.text_input("Name", value=st.session_state.patient_name)
+    st.session_state.patient_name = name_input
+    
+    if st.session_state.patient_name == '':
+        name_error = True
+    
+    age_input = st.text_input("Age", value=st.session_state.patient_age)
+    
+    try:
+        st.session_state.patient_age = int(age_input)
+    except ValueError:
+        if age_input:
+            st.error("Please enter a valid age.")
+        age_error = True
+    
+    st.button("Save Profile", on_click=save_profile_button(name_error, age_error))
+    
+    st.session_state.profile_viewed_once = True
 
     # TODO: persist data
 
     st.write("\n")
     st.subheader("Upload Photos")
-    st.write("Upload your photo library.")
+    st.write("Upload to your photo library.")
     uploaded_files = st.file_uploader("", accept_multiple_files=True, type=['png', 'jpg', 'jpeg'])
 
     if uploaded_files:
@@ -243,3 +258,13 @@ def display_photos_page():
         display_retrieved_photo(data['image_data'], data['description'])
         st.write("---")  # Separator between photos
 
+def save_profile_button(name_error, age_error):
+    if st.session_state.profile_viewed_once:
+        if name_error and age_error:
+            st.error("Please input your name and age.")
+        elif name_error:
+            st.error("Please input your name.")
+        elif age_error:
+            st.error("Please input your age.")
+        else:
+            st.success("Profile saved!")

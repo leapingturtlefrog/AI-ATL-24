@@ -35,8 +35,10 @@ def sign_in_or_register_page(st):
             payload = json.loads(base64.b64decode(payload))
             email = payload["email"]
             
-            st.session_state["auth"] = email
+            st.session_state["auth"] = payload["email"]
             st.session_state["token"] = result["token"]
+            st.session_state["patient_name"] = payload["name"]
+            print(st.session_state.patient_name)
             st.session_state.signed_in = True
             st.session_state.page = "home"
             st.rerun()
