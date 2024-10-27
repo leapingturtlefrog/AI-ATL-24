@@ -100,7 +100,7 @@ def call_gemini(photo_description):
     # Play the audio file in Streamlit
     with open(audio_file_path, 'rb') as audio_file:
         audio_bytes = audio_file.read()
-        st.audio(audio_bytes, format='audio/mp3', start_time=0)
+        st.audio(audio_bytes, format='audio/mp3', start_time=0, autoplay=True)
     conversation_history.append({'text': f"Chatbot: {ai_description}\n"})
     return ai_description
 
@@ -345,7 +345,6 @@ def start_session_page(st, metrics):
             # Process the new audio file(s)
             audio_file = audio_files[0]
             audio_file_path = os.path.join(audio_directory_path, audio_file)
-            st.audio(audio_file_path, format="audio/webm")
             with open(audio_file_path, 'rb') as f:
                 file_data = f.read()
             # Determine the file name and pass it to the transcribe_audio function
@@ -384,7 +383,7 @@ def start_session_page(st, metrics):
 
             with open(response_file_path, 'rb') as response_audio_file:
                 audio_bytes = response_audio_file.read()
-            st.audio(audio_bytes, format='audio/mp3', start_time=0)
+            st.audio(audio_bytes, format='audio/mp3', start_time=0, autoplay=True)
             os.remove(audio_file_path)
             os.remove(response_file_path)
             os.remove(mp3_file_path)
