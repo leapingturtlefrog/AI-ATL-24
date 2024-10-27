@@ -16,7 +16,7 @@ import firebase_admin
 from firebase_admin import credentials, db, storage
 
 st.set_page_config(
-    page_title="CareConnect",
+    page_title="Congnisense",
     page_icon="./static/icon.svg",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -33,12 +33,6 @@ if not firebase_admin._apps:
 
 with open("./components/styles.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-def fetch_metrics():
-    ref = db.reference("metrics")
-    data = ref.get()
-    parsed_metrics = {i + 1: list(data[i].values()) for i in range(len(data))}
-    return parsed_metrics
 
 def main():
     initialize_session_state()
@@ -73,11 +67,16 @@ def main():
         
     match st.session_state.page:
         case "home":
-            metrics = fetch_metrics()
+            ref = db.reference("metrics")
+            data = ref.get()
+            metrics = {}
+            i = 1
+            for metric in data:
+                metrics[i] = [metric["images_count"], metric["responses"], metric["total_time_minutes"]]
+                i += 1
             largest_keys = sorted(metrics.keys(), reverse=True)[:10]
             sorted_metrics = {key: metrics[key] for key in largest_keys}
             sorted_metrics = dict(sorted(sorted_metrics.items()))
-            print(sorted_metrics)
             home_page(st, sorted_metrics)
         case "session":
             start_session_page(st)

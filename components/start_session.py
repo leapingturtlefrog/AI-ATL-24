@@ -375,7 +375,9 @@ def start_session_page(st):
             st.session_state.conversation_history = conversation_history
             end_time = time.time()
             total_time_seconds = end_time - start_time
+            print("MINUTES", total_time_seconds)
             total_time_minutes = total_time_seconds / 60.0
+            print("MINUTES", total_time_minutes)
             st.session_state.metrics = {
                 "total_time_minutes": total_time_minutes,
                 "images_count": images_count,
