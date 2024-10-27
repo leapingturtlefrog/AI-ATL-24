@@ -24,13 +24,13 @@ def main():
     
     if "logged_out_recently" not in st.session_state:
         st.session_state.logged_out_recently = False
+    
     if st.session_state.logged_out_recently:
         sign_in_or_register_page(st)
         return
+    
     if "signed_in" not in st.session_state:
         st.session_state.signed_in = True
-    if "profile_viewed_once" not in st.session_state:
-        st.session_state.profile_viewed_once = False
     
     if st.session_state.signed_in:
         menu = ["Home", "Start Session", "Profile", "Upload Photos", "Sign out"]
@@ -76,7 +76,6 @@ def session_button():
     st.session_state.page = "session"
 
 def profile_button():
-    st.session_state.profile_viewed_once = False
     st.session_state.page = "profile"
 
 def sign_out_button():
