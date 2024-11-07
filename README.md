@@ -13,6 +13,8 @@ Cognisense is an innovative AI-driven application designed to help Alzheimer's a
 
 <br />
 
+[![Watch the demo](https://i.sstatic.net/Vp2cE.png)]([https://youtu.be/vt5fpE0bzSY](https://www.youtube.com/watch?v=YxRf4Va3rPQ))
+
 ### Run the code
 
 <br />
